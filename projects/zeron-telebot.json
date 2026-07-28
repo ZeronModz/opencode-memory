@@ -1,0 +1,284 @@
+{
+  "commands": [
+    {
+      "bot": "27063625",
+      "command": "*",
+      "admin_only": false,
+      "code": "bot.sendMessage(chat_id=message.chat.id, text=\"Sorry, I didn't understand.\\nUse \/zeron-menu to see options.\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/start",
+      "admin_only": false,
+      "code": "if params == \"update\":\n    Bot.runCommand(\"\/update\")\n    raise ReturnCommand()\nphoto_url = 'https:\/\/t.me\/zeronhub\/2'\ncaption = '\\u26a0\\ufe0f \\U0001d401\\U0001d428\\U0001d42d \\U0001d413\\U0001d422 \\U0001d414\\U0001d41c\\U0001d41e \\U0001d40a\\U0001d428\\U0001d42b\\U0001d42d\\U0001d41e,\\n\\U0001d40f\\U0001d425\\U0001d41e\\U0001d41a\\U0001d41c\\U0001d41e \\U0001d400\\U0001d426\\U0001d41a\\U0001d41d\\U0001d41e\\U0001d42b \\U0001d402\\U0001d421\\U0001d41a\\U0001d427\\U0001d427\\U0001d41e\\U0001d425\\n\\U0001d412\\U0001d42e\\U0001d41b\\U0001d41c\\U0001d42b\\U0001d422\\U0001d41b\\U0001d41e \\U0001d40a\\U0001d428\\U0001d42b\\U0001d42e\\U0001d427! \\U0001f341\\n\\n\\U0001f341\\U0001d412\\U0001d42e\\U0001d41b\\U0001d41c\\U0001d42b\\U0001d422\\U0001d41b\\U0001d41e \\U0001d40d\\U0001d41a \\U0001d40a\\U0001d428\\U0001d42b\\U0001d425\\U0001d41e,\\n\\U0001d401\\U0001d428\\U0001d42d \\U0001d413\\U0001d422 \\U0001d40a\\U0001d41a\\U0001d423 \\U0001d40a\\U0001d428\\U0001d42b\\U0001d41b\\U0001d41e \\U0001d40d\\U0001d41a \\U0001f44e'\nkeyboard = {\n    \"inline_keyboard\": [\n        [{\"text\": \"\ud83d\uddff \ud835\udc09\ud835\udc28\ud835\udc22\ud835\udc27 \ud835\udc0e\ud835\udc2e\ud835\udc2b \ud835\udc02\ud835\udc21\ud835\udc1a\ud835\udc27\ud835\udc27\ud835\udc1e\ud835\udc25 \ud83d\udda4\", \"url\": \"https:\/\/t.me\/CodeDevZeron\",\n       # \"icon_custom_emoji_id\": \"5192959294470895031\"\n            \n        }],\n        [{\"text\": \"\ud83d\uddff \ud835\udc09\ud835\udc28\ud835\udc22\ud835\udc27 \ud835\udc0e\ud835\udc2e\ud835\udc2b \ud835\udc02\ud835\udc21\ud835\udc1a\ud835\udc27\ud835\udc27\ud835\udc1e\ud835\udc25 \ud83d\udda4\", \"url\": \"https:\/\/t.me\/ZeronHub\",\n       # \"icon_custom_emoji_id\": \"5872904655251445933\n            \n        }],\n        [{\"text\": \"\ud83d\udcb8 \ud835\udc0a\ud835\udc28\ud835\udc2b\ud835\udc1e\ud835\udc1c\ud835\udc21\ud835\udc22 \ud835\udc02\ud835\udc21\ud835\udc1e\ud835\udc1c\ud835\udc24 \ud835\udc0a\ud835\udc28\ud835\udc2b\ud835\udc2e\ud835\udc27 \ud83d\udcb8\", \"callback_data\": \"\/zeron-vvvvvvvvvvvvvv\",\n      #  \"icon_custom_emoji_id\": \"6021412890496473421\"\n            \n        }]\n    ]\n}\nbot.sendPhoto(chat_id=message.chat.id, photo=photo_url, caption=caption, reply_markup=keyboard, parse_mode=\"HTML\")",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 20:16:44.978000",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-acc-del",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\u274c Delete Account<\/b>\\n\\nNo saved accounts.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = \"<b>\\u274c Select Account to Delete<\/b>\\n\\nTap the account you want to remove:\"\nbtns = []\nfor i, a in enumerate(lst):\n    d = a[:25] + \"...\" if len(a) > 25 else a\n    btns.append([{\"text\": f\"\\u274c {d}\", \"callback_data\": f\"\/zeron-acc-del-do {i}\"}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-acc-del-do",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nidx = int(params) if params else 0\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts found!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif idx < 0 or idx >= len(lst):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid account!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nemail = lst[idx]\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nlst.pop(idx)\nUser.saveData(\"accounts\", \",\".join(lst))\nbot.sendMessage(chat_id=chat_id, text=f\"\\u2705 <b>Account Deleted<\/b>\\n\\n\\U0001f4e7 <code>{email}<\/code>\\n\\nRemoved from your saved accounts.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f4cb My Accounts\", \"callback_data\": \"\/zeron-accounts\"}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-acc-detail",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nidx = int(params) if params else 0\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif idx < 0 or idx >= len(lst):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid account!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nemail = lst[idx]\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\ntext = f\"<b>\\U0001f4cb Account Details<\/b>\\n\\n<code>{email}<\/code>\\n\\nChoose an action:\"\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f4e5 View Inbox\", \"callback_data\": f\"\/zeron-inbox-acc {idx}\"}],\n    [{\"text\": \"\\U0001f4cb Copy Email\", \"copy_text\": {\"text\": email}}],\n    [{\"text\": \"\\U0001f5d1\\ufe0f Delete Msgs\", \"callback_data\": f\"\/zeron-delete-view {idx}\"}],\n    [{\"text\": \"\\u274c Delete Account\", \"callback_data\": f\"\/zeron-acc-del-do {idx}\"}],\n    [{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-acc-info\"}]\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-acc-info",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f4cb Account Manager<\/b>\\n\\nNo saved accounts yet.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f4e7 Generate\", \"callback_data\": \"\/zeron-generate\"}, {\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = \"<b>\\U0001f4cb Account Manager<\/b>\\n\\nSelect an account to manage:\"\nbtns = []\nfor i, a in enumerate(lst):\n    d = a[:20] + \"..\" if len(a) > 20 else a\n    btns.append([{\"text\": f\"\\U0001f4e7 {d}\", \"callback_data\": f\"\/zeron-acc-detail {i}\"}])\nbtns.append([{\"text\": \"\\U0001f4cb Export All\", \"callback_data\": \"\/zeron-export\"}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-accounts",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f4cb Your Accounts<\/b>\\n\\nNo saved accounts yet.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f4e7 Generate\", \"callback_data\": \"\/zeron-generate\"}, {\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = f\"<b>\\U0001f4cb Your Accounts ({len(lst)})<\/b>\\n\\nTap email to view inbox, tap \\U0001f4cb to copy:\"\nbtns = []\nfor i, a in enumerate(lst):\n    d = a[:18] + \"..\" if len(a) > 18 else a\n    btns.append([{\"text\": f\"\\U0001f4e7 {d}\", \"callback_data\": f\"\/zeron-inbox-acc {i}\"}, {\"text\": \"\\U0001f4cb\", \"copy_text\": {\"text\": a}}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-delete",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f5d1\\ufe0f Delete<\/b>\\n\\nNo accounts.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = \"<b>\\U0001f5d1\\ufe0f Select Account<\/b>\"\nbtns = []\nfor i, a in enumerate(lst):\n    btns.append([{\"text\": f\"\\U0001f4e7 {a}\", \"callback_data\": f\"\/zeron-delete-view {i}\"}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-delete-do",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nif not params or \"|\" not in params:\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid params!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nparts = params.split(\"|\")\nuid = parts[0]\nidx = int(parts[1]) if len(parts) > 1 else 0\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=f\"\\u23f3 Deleting {uid[:8]}...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"API password not set!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/delete\/\" + uid, headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text).strip()\nif resp.status_code == 200:\n    if resp_text == 'true' or '\"status\":true' in resp_text:\n        bot.sendMessage(chat_id=chat_id, text=\"\\u2705 Message moved to trash!\")\n    else:\n        bot.sendMessage(chat_id=chat_id, text=\"\\u274c Delete failed.\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\nbot.sendMessage(chat_id=chat_id, text=\"What next?\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f519 Back\", \"callback_data\": f\"\/zeron-delete-view {idx}\"}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-delete-view",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nidx = int(params) if params else 0\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif idx < 0 or idx >= len(lst):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid account!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nemail = lst[idx]\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=f\"\\u23f3 Loading messages for {email[:15]}...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"API password not set!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/read\/\" + email, headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text).replace('\\\\\"', '')\nif resp.status_code == 200:\n    subjs = re.findall('\"subject\":\"([^\"]*)\"', resp_text)\n    uids = re.findall('\"uid\":\"([^\"]*)\"', resp_text)\n    cnt = len(uids)\n    if cnt > 0:\n        result = f\"<b>\\U0001f5d1\\ufe0f {email[:12]}... ({cnt} msgs)<\/b>\\n\\nTap to delete:\"\n        btns = []\n        start = max(0, cnt - 10)\n        for i in range(start, cnt):\n            s = subjs[i][:30] if i < len(subjs) else ''\n            uid = uids[i] if i < len(uids) else ''\n            btns.append([{\"text\": f\"\\U0001f4ec {s}\", \"callback_data\": f\"\/zeron-delete-do {uid}|{idx}\"}])\n        btns.append([{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-delete\"}])\n        bot.sendMessage(chat_id=chat_id, text=result, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})\n    else:\n        bot.sendMessage(chat_id=chat_id, text=f\"<b>\\U0001f5d1\\ufe0f {email[:15]}...<\/b>\\n\\nNo messages to delete.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-delete\"}]]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-developer",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text='<b>\\U0001f468\\u200d\\U0001f4bb Developer<\/b>\\n\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\n<b>Dev:<\/b> Zeron Team\\n<b>Channel:<\/b> @CodeDevZeron\\n<b>Hub:<\/b> @ZeronHub\\n\\n\\U0001f517 <a href=\"https:\/\/t.me\/CodeDevZeron\">Join Dev Channel<\/a>\\n\\U0001f517 <a href=\"https:\/\/t.me\/ZeronHub\">Join Zeron Hub<\/a>\\n\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\nThanks for using Zeron Temp Mail! \\U0001f341', parse_mode=\"HTML\", disable_web_page_preview=True, reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-export",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f4cb Export Accounts<\/b>\\n\\nNo accounts to export.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = \"<b>\\U0001f4cb All Accounts<\/b>\\n\\n\"\nfor i, a in enumerate(lst):\n    text += f\"{i+1}. <code>{a}<\/code>\\n\"\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f4cb Copy All\", \"copy_text\": {\"text\": \"\\n\".join(lst)}}],\n    [{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-gen-dot",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=\"\\u23f3 Generating Dot alias...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"\\u26a0\\ufe0f API password not set! Admin use \/zeron-pass\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/generate\/dot\", headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text)\nif resp.status_code == 200:\n    if '\"status\":true' in resp_text:\n        emails = re.findall('\"email\":\"([^\"]*)\"', resp_text)\n        email = emails[0] if emails else ''\n        if email:\n            accs_raw = User.getData(\"accounts\")\n            if accs_raw:\n                _d = bf_json(accs_raw)\n                lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n            else:\n                lst = []\n            if email not in lst:\n                lst.append(email)\n            User.saveData(\"accounts\", \",\".join(lst))\n            bot.sendMessage(chat_id=chat_id, text=f\"\\u2705 <b>Gmail Generated!<\/b>\\n\\n\\U0001f4e7 <code>{email}<\/code>\\n\\n\\U0001f4c1 Saved to your account.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n                [{\"text\": \"\\U0001f4e5 Inbox\", \"callback_data\": \"\/zeron-inbox\"}, {\"text\": \"\\U0001f4cb Copy\", \"copy_text\": {\"text\": email}}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n            ]})\n        else:\n            bot.sendMessage(chat_id=chat_id, text=\"API error: Email not found\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    else:\n        msgs = re.findall('\"message\":\"([^\"]*)\"', resp_text)\n        em = msgs[0] if msgs else 'Unknown'\n        bot.sendMessage(chat_id=chat_id, text=f\"API error: {em}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-gen-mixed",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=\"\\u23f3 Generating Mixed alias...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"\\u26a0\\ufe0f API password not set! Admin use \/zeron-pass\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/generate\/mixed\", headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text)\nif resp.status_code == 200:\n    if '\"status\":true' in resp_text:\n        emails = re.findall('\"email\":\"([^\"]*)\"', resp_text)\n        email = emails[0] if emails else ''\n        if email:\n            accs_raw = User.getData(\"accounts\")\n            if accs_raw:\n                _d = bf_json(accs_raw)\n                lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n            else:\n                lst = []\n            if email not in lst:\n                lst.append(email)\n            User.saveData(\"accounts\", \",\".join(lst))\n            bot.sendMessage(chat_id=chat_id, text=f\"\\u2705 <b>Gmail Generated!<\/b>\\n\\n\\U0001f4e7 <code>{email}<\/code>\\n\\n\\U0001f4c1 Saved to your account.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n                [{\"text\": \"\\U0001f4e5 Inbox\", \"callback_data\": \"\/zeron-inbox\"}, {\"text\": \"\\U0001f4cb Copy\", \"copy_text\": {\"text\": email}}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n            ]})\n        else:\n            bot.sendMessage(chat_id=chat_id, text=\"API error: Email not found\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    else:\n        msgs = re.findall('\"message\":\"([^\"]*)\"', resp_text)\n        em = msgs[0] if msgs else 'Unknown'\n        bot.sendMessage(chat_id=chat_id, text=f\"API error: {em}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-gen-plus",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=\"\\u23f3 Generating Plus alias...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"\\u26a0\\ufe0f API password not set! Admin use \/zeron-pass\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/generate\/plus\", headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text)\nif resp.status_code == 200:\n    if '\"status\":true' in resp_text:\n        emails = re.findall('\"email\":\"([^\"]*)\"', resp_text)\n        email = emails[0] if emails else ''\n        if email:\n            accs_raw = User.getData(\"accounts\")\n            if accs_raw:\n                _d = bf_json(accs_raw)\n                lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n            else:\n                lst = []\n            if email not in lst:\n                lst.append(email)\n            User.saveData(\"accounts\", \",\".join(lst))\n            bot.sendMessage(chat_id=chat_id, text=f\"\\u2705 <b>Gmail Generated!<\/b>\\n\\n\\U0001f4e7 <code>{email}<\/code>\\n\\n\\U0001f4c1 Saved to your account.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n                [{\"text\": \"\\U0001f4e5 Inbox\", \"callback_data\": \"\/zeron-inbox\"}, {\"text\": \"\\U0001f4cb Copy\", \"copy_text\": {\"text\": email}}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n            ]})\n        else:\n            bot.sendMessage(chat_id=chat_id, text=\"API error: Email not found\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    else:\n        msgs = re.findall('\"message\":\"([^\"]*)\"', resp_text)\n        em = msgs[0] if msgs else 'Unknown'\n        bot.sendMessage(chat_id=chat_id, text=f\"API error: {em}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-generate",
+      "admin_only": false,
+      "code": "try:\n    bot.deleteMessage(chat_id=message.chat.id, message_id=message.message_id)\nexcept:\n    pass\ntext = '<b>\\U0001f4e7 Generate Temporary Gmail<\/b>\\n\\n\\U0001f511 <b>Dot<\/b> \\u2014 adds random dots\\n\\u2795 <b>Plus<\/b> \\u2014 adds +alias\\n\\U0001f300 <b>Mixed<\/b> \\u2014 random dot or plus\\n\\nChoose type:'\nbuttons = {\n    \"inline_keyboard\": [\n        [{\"text\": \"\\U0001f511 Dot Alias\", \"callback_data\": \"\/zeron-gen-dot\"}],\n        [{\"text\": \"\\u2795 Plus Alias\", \"callback_data\": \"\/zeron-gen-plus\"}],\n        [{\"text\": \"\\U0001f300 Mixed (Random)\", \"callback_data\": \"\/zeron-gen-mixed\"}],\n        [{\"text\": \"\\U0001f519 Back to Menu\", \"callback_data\": \"\/zeron-menu\"}]\n    ]\n}\nbot.sendMessage(chat_id=message.chat.id, text=text, reply_markup=buttons, parse_mode=\"HTML\")",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-inbox",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\n\naccs_raw = User.getData(\"accounts\")\nif accs_raw:\n    try:\n        _d = bf_json(accs_raw)\n        lst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\n    except:\n        lst = [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nelse:\n    lst = []\n\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f4e5 Inbox<\/b>\\n\\nNo accounts.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f4e7 Generate\", \"callback_data\": \"\/zeron-generate\"}, {\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\ntext = \"<b>\\U0001f4e5 Select Account<\/b>\"\nbtns = []\nfor i, a in enumerate(lst):\n    btns.append([{\"text\": f\"\\U0001f4e7 {a}\", \"callback_data\": f\"\/zeron-inbox-acc {i}\"}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-inbox-acc",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nidx = int(params) if params else 0\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif idx < 0 or idx >= len(lst):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid account!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nemail = lst[idx]\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=f\"\\u23f3 Fetching inbox for {email[:20]}...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"API password not set!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/read\/\" + email, headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text)\nif resp.status_code != 200:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\ncleaned = resp_text.replace('\\\\\"', '')\nfroms = re.findall('\"from\":\"([^\"]*)\"', cleaned)\nif not froms:\n    bot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f4e5 Inbox<\/b>\\n\\n\\U0001f4ed No messages.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-inbox\"}]]})\n    raise ReturnCommand()\n\nnames = []\nfor i in range(len(froms)):\n    f = froms[i]\n    if \" <\" in f:\n        name = f.split(\" <\")[0]\n    else:\n        name = f\n    names.append(name)\n\nBot.saveData(\"inbox_raw\", resp_text)\nBot.saveData(\"inbox_names\", \"||\".join(names))\nBot.saveData(\"inbox_cnt\", str(len(froms)))\nBot.saveData(\"inbox_acc_idx\", str(idx))\n\ncnt = len(froms)\nper_page = 10\npage = 0\nstart = page * per_page\nend = start + per_page\nif end > cnt:\n    end = cnt\ntotal_pages = (cnt + per_page - 1) \/\/ per_page\ntext = f\"<b>\\U0001f4e5 Inbox ({cnt}) \\u2014 Page 1\/{total_pages}<\/b>\\n\\U0001f464 Select a sender:\"\nbtns = []\nfor j in range(start, end):\n    n = names[j][:25]\n    btns.append([{\"text\": f\"\\U0001f464 {j+1}. {n}\", \"callback_data\": f\"\/zeron-inbox-msg {j}\"}])\nnav = []\nif end < cnt:\n    nav.append({\"text\": \"Next \\u25b6\\ufe0f\", \"callback_data\": \"\/zeron-inbox-page 1\"})\nnav.append({\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-inbox\"})\nbtns.append(nav)\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-inbox-html",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nbot.sendMessage(chat_id=chat_id, text=\"\\U0001f310 <b>View HTML<\/b>\\n\\nComing soon! This will open a beautiful HTML view via WebApp.\", parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-inbox-page 0\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-inbox-msg",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nj = int(params) if params else 0\nif j < 0:\n    j = 0\nraw = Bot.getData(\"inbox_raw\")\nif not raw:\n    Bot.runCommand(\"\/zeron-inbox\")\n    raise ReturnCommand()\ncleaned = raw.replace('\\\\\"', '')\nfroms = re.findall('\"from\":\"([^\"]*)\"', cleaned)\nsubjs = re.findall('\"subject\":\"([^\"]*)\"', cleaned)\ndates = re.findall('\"date\":\"([^\"]*)\"', cleaned)\nbodys = re.findall('\"body\":\"([^\"]*)\"', cleaned)\ntos = re.findall('\"to\":\"([^\"]*)\"', cleaned)\nuids = re.findall('\"uid\":\"([^\"]*)\"', cleaned)\nif j >= len(froms):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid message!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nf = froms[j] if j < len(froms) else '?'\ns = subjs[j] if j < len(subjs) else '?'\nd = dates[j] if j < len(dates) else '?'\nb = bodys[j] if j < len(bodys) else '?'\nt = tos[j] if j < len(tos) else '?'\nu = uids[j] if j < len(uids) else '?'\nb = b.replace('\\\\r', '').replace('\\\\n', '\\n')\nweb_url = \"https://inbox-six-neon.vercel.app/?from=\" + rawurlencode(f) + \"&subject=\" + rawurlencode(s) + \"&date=\" + rawurlencode(d) + \"&to=\" + rawurlencode(t) + \"&uid=\" + rawurlencode(u) + \"&body=\" + rawurlencode(b)\nif len(b) > 2000:\n    b = b[:2000] + \"\\n... (truncated)\"\ntext = f\"<b>\\U0001f4ec Message #{j+1}<\/b>\\n\"\ntext += \"\\u2501\" * 20 + \"\\n\"\ntext += f\"<b>\\U0001f464 From:<\/b> {f}\\n\"\ntext += f\"<b>\\U0001f4c5 Date:<\/b> {d}\\n\"\ntext += f\"<b>\\U0001f4dd Subject:<\/b> {s}\\n\"\ntext += f\"<b>\\U0001f4e7 To:<\/b> {t}\\n\"\ntext += f\"<b>\\U0001f511 UID:<\/b> {u}\\n\"\ntext += \"\\u2501\" * 20 + \"\\n\"\ntext += f\"<b>\\U0001f4ac Body:<\/b>\\n\\n{b}\"\nnav = []\nif j > 0:\n    nav.append({\"text\": \"\\u25c0\\ufe0f Prev\", \"callback_data\": f\"\/zeron-inbox-msg {j-1}\"})\nnav.append({\"text\": \"\\U0001f519 List\", \"callback_data\": \"\/zeron-inbox-page 0\"})\nif j < len(froms) - 1:\n    nav.append({\"text\": \"Next \\u25b6\\ufe0f\", \"callback_data\": f\"\/zeron-inbox-msg {j+1}\"})\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f310 View HTML\", \"web_app\": {\"url\": web_url}}],\n    nav\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-inbox-page",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\npage = int(params) if params else 0\nif page < 0:\n    page = 0\nraw = Bot.getData(\"inbox_raw\")\nif not raw:\n    Bot.runCommand(\"\/zeron-inbox\")\n    raise ReturnCommand()\nnames_raw = Bot.getData(\"inbox_names\")\ncnt_raw = Bot.getData(\"inbox_cnt\")\nif not names_raw:\n    Bot.runCommand(\"\/zeron-inbox\")\n    raise ReturnCommand()\nnames = names_raw.split(\"||\")\ncnt = int(cnt_raw) if cnt_raw else len(names)\nper_page = 10\ntotal_pages = (cnt + per_page - 1) \/\/ per_page\nif page >= total_pages:\n    page = total_pages - 1\nstart = page * per_page\nend = start + per_page\nif end > cnt:\n    end = cnt\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\ntext = f\"<b>\\U0001f4e5 Inbox ({cnt}) \\u2014 Page {page+1}\/{total_pages}<\/b>\\n\\U0001f464 Select a sender:\"\nbtns = []\nfor j in range(start, end):\n    n = names[j][:25]\n    btns.append([{\"text\": f\"\\U0001f464 {j+1}. {n}\", \"callback_data\": f\"\/zeron-inbox-msg {j}\"}])\nnav = []\nif page > 0:\n    nav.append({\"text\": \"\\u25c0\\ufe0f Prev\", \"callback_data\": f\"\/zeron-inbox-page {page-1}\"})\nif end < cnt:\n    nav.append({\"text\": \"Next \\u25b6\\ufe0f\", \"callback_data\": f\"\/zeron-inbox-page {page+1}\"})\nnav.append({\"text\": \"\\U0001f519 Back\", \"callback_data\": \"\/zeron-inbox\"})\nbtns.append(nav)\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-menu",
+      "admin_only": false,
+      "code": "try:\n    bot.deleteMessage(chat_id=message.chat.id, message_id=message.message_id)\nexcept:\n    pass\ntext = '<b>\\U0001f381 Zeron Temp Mail<\/b>\\n\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\n\\u2705 Welcome to the main menu!\\n\\n\\U0001f4e7 Generate temporary Gmail aliases\\n\\U0001f4e5 Check your inbox in real-time\\n\\U0001f50d Search through your emails\\n\\U0001f5d1\\ufe0f Delete unwanted messages\\n\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\nSelect an option below:'\nbuttons = {\n    \"inline_keyboard\": [\n        [{\"text\": \"\\U0001f4e7 Generate Gmail\", \"callback_data\": \"\/zeron-generate\"}],\n        [{\"text\": \"\\U0001f4cb My Accounts\", \"callback_data\": \"\/zeron-accounts\"}],\n        [{\"text\": \"\\U0001f4e5 Inbox\", \"callback_data\": \"\/zeron-inbox\"}],\n        [{\"text\": \"\\U0001f50d Search Emails\", \"callback_data\": \"\/zeron-search\"}],\n        [{\"text\": \"\\U0001f5d1\\ufe0f Delete Messages\", \"callback_data\": \"\/zeron-delete\"}],\n        [{\"text\": \"\\u274c Delete Account\", \"callback_data\": \"\/zeron-acc-del\"}],\n        [{\"text\": \"\\U0001f4cb Account Manager\", \"callback_data\": \"\/zeron-acc-info\"}],\n        [{\"text\": \"\\U0001f468\\u200d\\U0001f4bb Developer\", \"callback_data\": \"\/zeron-developer\"}, {\"text\": \"\\U0001f4da Tutorial\", \"callback_data\": \"\/zeron-tutorial\"}]\n    ]\n}\nbot.sendMessage(chat_id=message.chat.id, text=text, reply_markup=buttons, parse_mode=\"HTML\")",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-pass",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nif u != 5271912123:\n    bot.sendMessage(chat_id=chat_id, text=\"\\u274c Only the bot owner can use this command.\")\n    raise ReturnCommand()\nif params:\n    Bot.saveData(\"api_pass\", params.strip())\n    bot.sendMessage(chat_id=chat_id, text=\"\\u2705 API password set successfully!\")\nelse:\n    current = Bot.getData(\"api_pass\")\n    status = \"\\u2705 Set\" if current else \"\\u274c Not set\"\n    bot.sendMessage(chat_id=chat_id, text=f\"<b>API Password: {status}<\/b>\\n\\nUsage:\\n<code>\/zeron-pass YOUR_GMAIL_APP_PASSWORD<\/code>\", parse_mode=\"HTML\")",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-search",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=\"<b>\\U0001f50d Search Emails<\/b>\\n\\nEnter search text:\", parse_mode=\"HTML\")\nBot.handleNextCommand(\"\/zeron-search-do\")",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-search-do",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nsearch_text = msg.strip()\nif not search_text:\n    bot.sendMessage(chat_id=chat_id, text=\"Enter valid text!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts! Generate first.\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif not lst:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nUser.saveData(\"search_text\", search_text)\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\ntext = f\"<b>\\U0001f50d Search:<\/b> \\\"{search_text}\\\"\\n\\nSelect account:\"\nbtns = []\nfor i, a in enumerate(lst):\n    btns.append([{\"text\": f\"\\U0001f4e7 {a}\", \"callback_data\": f\"\/zeron-search-view {i}\"}])\nbtns.append([{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}])\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": btns})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-search-view",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\nidx = int(params) if params else 0\naccs_raw = User.getData(\"accounts\")\nif not accs_raw:\n    bot.sendMessage(chat_id=chat_id, text=\"No accounts!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n_d = bf_json(accs_raw)\nlst = _d if isinstance(_d, list) else [x for x in accs_raw.split(\",\") if x and not x.startswith(\"[\") and not x.endswith(\"]\")]\nif idx < 0 or idx >= len(lst):\n    bot.sendMessage(chat_id=chat_id, text=\"Invalid account!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\nemail = lst[idx]\nsearch_text = User.getData(\"search_text\") or \"\"\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\nbot.sendMessage(chat_id=chat_id, text=f\"\\u23f3 Searching \\\"{search_text}\\\" in {email[:15]}...\")\n\napi_pass = Bot.getData(\"api_pass\")\nif not api_pass:\n    bot.sendMessage(chat_id=chat_id, text=\"API password not set!\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})\n    raise ReturnCommand()\n\nresp = HTTP.get(\"https:\/\/zeron-gmail.vercel.app\/api\/readby\/\" + email + \"\/\" + search_text, headers={\"Authorization\": f\"Bearer {api_pass}\"})\nresp_text = str(resp.text).replace('\\\\\"', '')\nif resp.status_code == 200:\n    subjs = re.findall('\"subject\":\"([^\"]*)\"', resp_text)\n    if subjs:\n        froms = re.findall('\"from\":\"([^\"]*)\"', resp_text)\n        dates = re.findall('\"date\":\"([^\"]*)\"', resp_text)\n        cnt = len(subjs)\n        result = f\"<b>\\U0001f50d Results: \\\"{search_text}\\\" ({cnt})<\/b>\\n\"\n        result += \"\\u2500\" * 15 + \"\\n\"\n        limit = min(cnt, 10)\n        for i in range(limit):\n            s = subjs[i][:40]\n            f = froms[i][:30] if i < len(froms) else ''\n            d = dates[i][:10] if i < len(dates) else ''\n            result += f\"\\U0001f4ec <b>{s}<\/b>\\n\\U0001f464 {f}\\n\\U0001f4c5 {d}\\n\\n\"\n        if cnt > 10:\n            result += f\"... +{cnt-10} more\\n\"\n    else:\n        result = f\"<b>\\U0001f50d No results<\/b>\\n\\n\\\"{search_text}\\\" not found.\"\n    bot.sendMessage(chat_id=chat_id, text=result, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n        [{\"text\": \"\\U0001f519 New Search\", \"callback_data\": \"\/zeron-search\"}, {\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]\n    ]})\nelse:\n    bot.sendMessage(chat_id=chat_id, text=f\"HTTP {resp.status_code}\", reply_markup={\"inline_keyboard\": [[{\"text\": \"\\U0001f519 Menu\", \"callback_data\": \"\/zeron-menu\"}]]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-tutorial",
+      "admin_only": false,
+      "code": "chat_id = message.chat.id\ntry:\n    bot.deleteMessage(chat_id=chat_id, message_id=message.message_id)\nexcept:\n    pass\ntext = \"<b>\\U0001f4da Zeron Temp Mail - Tutorial<\/b>\"\ntext += \"\\n\" + \"\\u2500\" * 20 + \"\\n\\n\"\ntext += \"\\U0001f4e7 <b>Generate Gmail<\/b>\\n\"\ntext += \"Create temp aliases using Dot, Plus, or Mixed.\\n\"\ntext += \"Each alias saves to your personal list.\\n\\n\"\ntext += \"\\U0001f4cb <b>My Accounts<\/b>\\n\"\ntext += \"View all your saved email addresses.\\n\"\ntext += \"Tap any to check its inbox.\\n\\n\"\ntext += \"\\U0001f4e5 <b>Inbox<\/b>\\n\"\ntext += \"Read the latest messages for any account.\\n\"\ntext += \"Shows newest 5 messages by default.\\n\\n\"\ntext += \"\\U0001f50d <b>Search Emails<\/b>\\n\"\ntext += \"Find emails by keyword across any account.\\n\\n\"\ntext += \"\\U0001f5d1\\ufe0f <b>Delete Messages<\/b>\\n\"\ntext += \"Remove unwanted messages from your inbox.\\n\\n\"\ntext += \"\\u274c <b>Delete Account<\/b>\\n\"\ntext += \"Remove a saved Gmail from your list.\\n\\n\"\ntext += \"\\u2500\" * 20 + \"\\n\"\ntext += \"\\u2139\\ufe0f Each user has a private isolated list.\"\nbot.sendMessage(chat_id=chat_id, text=text, parse_mode=\"HTML\", reply_markup={\"inline_keyboard\": [\n    [{\"text\": \"\\U0001f4e7 Generate\", \"callback_data\": \"\/zeron-generate\"}, {\"text\": \"\\U0001f4cb Accounts\", \"callback_data\": \"\/zeron-accounts\"}],\n    [{\"text\": \"\\U0001f4e5 Inbox\", \"callback_data\": \"\/zeron-inbox\"}, {\"text\": \"\\U0001f50d Search\", \"callback_data\": \"\/zeron-search\"}],\n    [{\"text\": \"\\U0001f5d1\\ufe0f Del Msgs\", \"callback_data\": \"\/zeron-delete\"}, {\"text\": \"\\u274c Del Acc\", \"callback_data\": \"\/zeron-acc-del\"}],\n    [{\"text\": \"\\U0001f519 Main Menu\", \"callback_data\": \"\/zeron-menu\"}],\n    [{\"text\": \"\\U0001f468\\u200d\\U0001f4bb Developer\", \"callback_data\": \"\/zeron-developer\"}]\n]})",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 19:49:35",
+      "pinned": false
+    },
+    {
+      "bot": "27063625",
+      "command": "\/zeron-vvvvvvvvvvvvvv",
+      "admin_only": false,
+      "code": "bot.deleteMessage(chat_id=message.chat.id, message_id=message.message_id)\n\ndef check():\n    channels = [\"@CodeDevZeron\", \"@zeronhub\"]  # Add all channel usernames here\n    not_joined_channels = []  # To store channels that are not joined\n\n    for channel in channels:\n        check = bot.getChatMember(channel, u)\n        if check.status == 'left':\n            not_joined_channels.append(channel)  # Add channel to the not-joined list\n\n    # Return not joined channels or True if all joined\n    return not_joined_channels if not_joined_channels else True\n\n\nnot_joined = check()\n\nif not_joined != True:\n    # Create a list of buttons with channels' subscribe status and links to open them\n    buttons = []\n    for channel in [\"@CodeDevZeron\", \"@zeronhub\"]:\n        channel_link = f\"https:\/\/t.me\/{channel[1:]}\"  # Generate link for the channel\n        if channel in not_joined:\n            buttons.append([\n                InlineKeyboardButton(f\"{channel} - \ud835\udc0d\ud835\udc28 \ud835\udc12\ud835\udc2e\ud835\udc1b\ud835\udc2c\ud835\udc1c\ud835\udc2b\ud835\udc22\ud835\udc1b\ud835\udc1e \u274c\", url=channel_link)\n            ])\n        else:\n            buttons.append([\n                InlineKeyboardButton(f\"{channel} - \ud835\udc15\ud835\udc1e\ud835\udc2b\ud835\udc22\ud835\udc1f\ud835\udc22\ud835\udc1e\ud835\udc1d \u2705\", url=channel_link)\n            ])\n\n    # Add \"Try Again\" button\n    buttons.append([\n        InlineKeyboardButton(\"\ud83d\udd04 \ud835\udc13\ud835\udc2b\ud835\udc32 \ud835\udc00\ud835\udc20\ud835\udc1a\ud835\udc22\ud835\udc27\", callback_data=\"\/zeron-vvvvvvvvvvvvvv\")\n    ])\n\n    # Send the message with buttons\n    bot.replyText(\n        u,\n        \"\u2757 \ud835\udc03\u00f4\ud835\udc32\ud835\udc1a \ud835\udc0a\u00f4\ud835\udc2b\ud835\udc1e \ud835\udc00\ud835\udc26\ud835\udc1a\ud835\udc1d\ud835\udc1e\ud835\udc2b \ud835\udc02\ud835\udc21\ud835\udc1a\ud835\udc27\ud835\udc27\ud835\udc1e\ud835\udc25 \ud835\udc06\ud835\udc2e\ud835\udc25\ud835\udc28 \ud835\udc12\ud835\udc2e\ud835\udc1b\ud835\udc2c\ud835\udc1c\ud835\udc2b\ud835\udc22\ud835\udc1b\ud835\udc1e \ud835\udc0a\u00f4\ud835\udc2b\ud835\udc1e \ud835\udc13\ud835\udc2b\ud835\udc32 \ud835\udc00\ud835\udc20\ud835\udc1a\ud835\udc22\ud835\udc27 \ud835\udc01\ud835\udc2e\ud835\udc2d\ud835\udc2d\ud835\udc28\ud835\udc27 \ud835\udc00 \ud835\udc02\ud835\udc25\ud835\udc22\ud835\udc1c\ud835\udc24 \ud835\udc03\ud835\udc22\ud835\udc27.\",\n        reply_markup=InlineKeyboardMarkup(buttons)\n    )\n\n    # Stop command execution\n    raise ReturnCommand()\n\nelse:\n    # Redirect new user to \/account command\n Bot.runCommand(\"\/zeron-menu\")\n    # \u2705 New User Notification (Safe & Enhanced)\ntry:\n        started = User.getData(\"started\")\n\n        if started is not True:\n            # Mark user as started\n            User.saveData(\"started\", True)\n\n            # Increase global user count resource\n            st = libs.Resources.globalRes('status').add(1)\n            total_users_count = int(st)\n\n            # User ID and name\n            u = message.chat.id\n            fname = apply_html_entities(message.chat.first_name or \"Unknown\", None)\n            lname = apply_html_entities(message.chat.last_name or \"\", None)\n            uname = apply_html_entities(message.chat.username or \"\", None)\n            full_name = f\"{fname} {lname}\".strip()\n\n            # Optional username display\n            if uname != \"\":\n                hh = f\"(@{uname})\"\n            else:\n                hh = \"\"\n\n            # Notify admin\n            bot.sendMessage(\n                chat_id=5271912123,  # Replace with your admin ID\n                text=f\"\"\"\u3032\ud835\udc0d\u1d07\u1d21 \ud835\udc14s\u1d07\u0280 \ud835\udc0d\u1d0f\u1d1b\u026a\u0493\u026a\ud835\udc1c\u1d00\u1d1b\u026a\ud835\udc28\ud835\udc27\u30c5\n\n\u250c\u2500  \ud835\udc14s\u1d07\u0280\n\u2514\u2500\u2500\u257c <a href='tg:\/\/user?id={u}'>{full_name}<\/a> {hh}\n\u250c\u2500  \ud835\udc14s\u1d07\u0280 \ud835\udc08\ud835\udc03\n\u2514\u2500\u2500\u257c <code>{u}<\/code>\n\u250c\u2500  \ud835\udc13\u1d0f\u1d1b\u1d00\ud835\udc25 \ud835\udc14s\u1d07\u0280\n\u2514\u2500\u2500\u257c \ud835\udc02\u1d0f\u1d1c\u0274\u1d1b \u2445 {total_users_count}\n\"\"\",\n                parse_mode=\"html\",\n                disable_web_page_preview=True\n            )\n\n            \n\nexcept Exception as e:\n        bot.sendMessage(\n            chat_id=\"@updattex\",\n            text=f\"<b>\u26a0\ufe0f Error in \/start:<\/b>\\n<code>{apply_html_entities(str(e), None)}<\/code>\",\n            parse_mode=\"html\"\n        )\n        \n        ",
+      "created_at": "2026-07-27 19:49:35",
+      "folder": "",
+      "last_updated": "2026-07-27 20:13:33.228000",
+      "pinned": false
+    }
+  ]
+}
