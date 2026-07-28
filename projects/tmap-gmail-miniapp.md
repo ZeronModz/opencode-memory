@@ -1,50 +1,50 @@
 # Tmap Gmail Mini App
 
-## Status: Active (Rebuilt v2)
+## Status: Active (v3 — Redesigned)
 
-## Last Updated: 2026-07-28 23:44
+## Last Updated: 2026-07-28 23:50
 
 ## Description
-Telegram Mini App for Tmap Gmail bot. Brutalism design. Users can view their Gmail accounts, read inbox, generate new email addresses, and manage settings — all inside Telegram.
+Telegram Mini App for Tmap Gmail bot. Clean modern flat design (light theme). Users view Gmail accounts, read inbox, generate emails, manage settings — inside Telegram.
 
 ## Tech Stack
 - Single HTML file (inline CSS + JS, zero external dependencies)
-- Telegram WebApp SDK v6+ (loaded from CDN)
-- Vercel (serverless + static hosting)
+- Telegram WebApp SDK v6+ (CDN)
 - Vercel serverless function: `api/proxy.mjs`
 - Backend API: `https://zeron-gmail.vercel.app/api/`
 
-## Files (in `/storage/emulated/0/Download/tmp-gmail-miniapp/`)
-- `index.html` — Everything: HTML, CSS (inline `<style>`), JS (inline `<script>`)
-- `api/proxy.mjs` — Vercel serverless function (reads APP_PASS from env, proxies to backend)
-- `vercel.json` — Vercel deployment config (static + node + CSP)
+## Files
+- `index.html` — All HTML, CSS, JS inline (single file)
+- `api/proxy.mjs` — Vercel serverless, reads APP_PASS from env
+- `vercel.json` — Static + Node deployment + CSP
 
-## Key Architecture Changes (v2)
-- **No ES modules** — all JS is inline regular script (no import/export issues in WebView)
-- **No external CSS** — CSS inline in `<style>` tag (no path resolution issues)
-- **APP_PASS from Vercel env** — API password set as Vercel environment variable, not localStorage
-- **API Proxy** — Frontend calls `/api/proxy?method=...`, serverless function adds Bearer token
-- **Brutalism v2** — 4px borders, 900 bold everywhere, pure primary colors, no transitions
+## Design System (v3 — Clean Modern Flat)
+- **Background:** Slate-50 (#F1F5F9)
+- **Cards:** White (#FFFFFF) with subtle shadow
+- **Primary:** Teal (#0D9488 / #14B8A6)
+- **Text:** Slate-900 (#0F172A) / Slate-500 (#64748B)
+- **Accent:** Orange (#F97316) for CTAs
+- **Destructive:** Red (#EF4444)
+- **Border Radius:** 12px cards, 8px small elements
+- **Typography:** System sans-serif (-apple-system, Inter, Segoe UI)
+- **Transitions:** 150-200ms eased-in-out
+- **Shadows:** Subtle multi-layer (0 1px 3px rgba(0,0,0,0.06))
+- **Nav:** Card-style white bottom bar with teal top indicator
 
 ## Features
-- Bottom navigation: Profile, Inbox, Generate, Settings
-- Telegram user info (avatar, name, username, premium status)
-- Account list with detail (view inbox, copy, delete)
+- Bottom nav: Profile, Inbox, Generate, Settings
+- Telegram user profile with premium badge
+- Account list with detail/inbox/copy/delete
 - Inbox with pagination + search
-- Generate accounts: Dot Trick, Plus Alias, Mixed, Custom
-- API password via Vercel env var (APP_PASS)
-- Export accounts, Tutorial, Developer info
-- Toast notifications, modal system
+- Generate: Dot Trick, Plus Alias, Mixed, Custom
+- API proxy via Vercel env var (APP_PASS)
+- Export, Tutorial, Developer info
+- Modal, Toast notification, Empty states
 
-## Vercel Environment Variables
-- `APP_PASS` — must match the bot's api_pass (set via `/zeron-pass`)
+## Vercel Env
+- `APP_PASS` — matches bot's api_pass (/zeron-pass)
 
-## Deployment
-1. Push to GitHub
-2. Import to Vercel
-3. Set `APP_PASS` env var in Vercel project settings
-4. Set Mini App URL in BotFather
-
-## Notes
-- Brutalism design: pure black/white, 4px borders, monospace (Courier New), yellow (#FF0) accent, red (#F00) destructive, 0px radius, 0s transitions
-- No build step needed — Vercel serves directly
+## Design Evolution
+- v1: Brutalism dark (ES modules — failed in WebView)
+- v2: Brutalism dark (single file, stronger)
+- v3: Clean modern flat light theme (current)
