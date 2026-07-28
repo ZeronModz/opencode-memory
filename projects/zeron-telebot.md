@@ -59,5 +59,20 @@
 - JSON validity maintained by using `json.load/dump` instead of string replacement
 - Handled both `\UXXXXXXXX` escape text AND actual Unicode emoji chars
 
-**Output file**: `/storage/emulated/0/Download/zeron-telebot.json` (63371 bytes, valid JSON)
+**Output file**: `/storage/emulated/0/Download/zeron-telebot.json` (79288 bytes, valid JSON)
 **Script**: `/data/data/com.termux/files/usr/tmp/opencode/transform_json.py`
+
+### 2026-07-28 22:XX — Second Pass: Complete Font Consistency (CRITICAL)
+**Problem**: First pass left ~47 display strings with partial plain ASCII. Button texts, messages, captions had inconsistent bolding.
+
+**Root Cause**: Phrase-list approach was inherently incomplete — many display strings weren't covered.
+
+**Solution**: Rewrote with `bold_str()` — an intelligent function that:
+1. Finds ALL display strings via regex (`text=`, `caption=`, `"text"=`)
+2. Bolds every English letter (A-Z a-z) inside them
+3. Preserves {template vars}, <HTML tags>, \escape sequences, and symbols
+4. Uses proper Python string pattern matching (handles escaped quotes)
+
+**TPY Syntax Note**: TBC uses `"text"="..."` (equals sign) instead of standard JSON `"text": "..."`. Both patterns matched.
+
+**State**: ✅ ALL display text now consistently bold. Ready for import.
