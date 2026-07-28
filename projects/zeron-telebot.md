@@ -42,3 +42,22 @@
 - `/zeron-search` / `/zeron-search-do` / `/zeron-search-view` — Search
 - `/zeron-pass` — Set API password
 - `/zeron-developer` / `/zeron-tutorial` — Info
+
+### 2026-07-28 22:04 — Full Emoji → Symbol Replacement + Text Bolding
+**Summary**: Removed all decorative emoji from entire bot JSON, replaced with clean text symbols (◆◉◎▣✕+◂▸i!), and converted all display text to mathematical bold Unicode.
+
+**What changed**:
+- Every `\U0001f...` emoji escape → `◆ ◉ ◎ ▣ ✕ + ◂ ▸ i !` symbols
+- Plain ASCII display text (Menu, Back, Generate, etc.) → mathematical bold (𝐌𝐞𝐧𝐮, 𝐁𝐚𝐜𝐤, 𝐆𝐞𝐧𝐞𝐫𝐚𝐭𝐞, etc.)
+- `/start` buttons: 🗿→◉, 🖤→(removed), 💸→◆
+- `/zeron-vvvvvvvvvvvvvv` verification command: ❌→✕, ✅→◆, 🔄→◎, ⚠→!, ❗→!
+- All callback_data, function names, Python logic preserved
+
+**Critical fixes applied**:
+- `handleNextCommand` preserved (word boundary regex, not simple str.replace)
+- `nSelect` variable preserved (same reason)
+- JSON validity maintained by using `json.load/dump` instead of string replacement
+- Handled both `\UXXXXXXXX` escape text AND actual Unicode emoji chars
+
+**Output file**: `/storage/emulated/0/Download/zeron-telebot.json` (63371 bytes, valid JSON)
+**Script**: `/data/data/com.termux/files/usr/tmp/opencode/transform_json.py`
