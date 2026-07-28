@@ -42,6 +42,12 @@
 - After edit → log new state with timestamp
 - Never delete old memory — just add new layer
 
+## Git Sync Protocol (CRITICAL)
+- Memory folder = git repo (GitHub: ZeronModz/opencode-memory.git)
+- After EVERY memory change → commit + push immediately
+- Command: `git add -A && git commit -m "message" && git push`
+- Never skip. Real-time backup maintain korte hobe.
+
 ## Reply Rules (STRICT)
 - **ALWAYS Banglish** — Bangla + English mix ONLY in Roman script
 - **NEVER use Bengali script** (like হাই, কেমন, আচ্ছা) — strictly forbidden
