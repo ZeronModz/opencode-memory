@@ -62,6 +62,16 @@
 **Output file**: `/storage/emulated/0/Download/zeron-telebot.json` (79288 bytes, valid JSON)
 **Script**: `/data/data/com.termux/files/usr/tmp/opencode/transform_json.py`
 
+### 2026-07-28 22:XX — TBC Import Fix (CRITICAL)
+**Problem**: TBC gave "Syntax Error: cannot assign to literal" — two causes:
+1. Dict `=` vs `:` — my replace function used `=` but Python/TBC requires `:`
+2. Actual Unicode bold chars in source code broke TBC's parser (though Python's compile() was fine)
+
+**Fix**: 
+- Preserve original dict separator (capture and reuse)
+- Use Python `\UXXXXXXXX` escape text for bold chars (same format as original `/start` caption)
+- Output: 76857 bytes, valid JSON, all code compiles in Python
+
 ### 2026-07-28 22:XX — Second Pass: Complete Font Consistency (CRITICAL)
 **Problem**: First pass left ~47 display strings with partial plain ASCII. Button texts, messages, captions had inconsistent bolding.
 
