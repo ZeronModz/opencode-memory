@@ -48,6 +48,14 @@
 - Command: `git add -A && git commit -m "message" && git push`
 - Never skip. Real-time backup maintain korte hobe.
 
+## Device Tracking (CRITICAL for multi-phone)
+1. Same memory repo 2+ phones e use hocche.
+2. **Current phone** details always session log e likhte hobe.
+3. `devices/` folder e proti phone er alada file rakhte hobe (phone-1, phone-2, etc.)
+4. Session start e check koro: current phone ki, tar device file read koro.
+5. User kono phone switch korle — session e note koro + je phone theke bolche ta identify koro.
+6. **Reply always Banglish** regardless of which phone.
+
 ## Reply Rules (STRICT)
 - **ALWAYS Banglish** — Bangla + English mix ONLY in Roman script
 - **NEVER use Bengali script** (like হাই, কেমন, আচ্ছা) — strictly forbidden
