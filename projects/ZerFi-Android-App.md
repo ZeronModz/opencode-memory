@@ -1,65 +1,53 @@
-# ZerFi Android App
+# ZerFi Android App (Updated)
 
 ## Project Info
 - **GitHub**: https://github.com/ZeronModz/ZerFi
-- **Type**: Android APK (Material Design 3) wrapping ZerFi WPS tool
-- **Built**: 2026-07-31
+- **Type**: Android APK (Material Design 3) — Standalone WPS Tool
+- **Built**: 2026-07-31 (v2)
 - **Package**: com.zerfi.app
-- **APK Location**: /data/data/com.termux/files/home/ZerFi.apk (15MB)
+- **APK**: /data/data/com.termux/files/home/ZerFi.apk (15MB)
 
-## Project Structure
+## Architecture (v2 - Fixed + Standalone)
+- **No Termux dependency** — direct root shell commands to system binaries
+- **No Python dependency** — uses `wpa_cli`, `iw`, `ip` directly
+- **Material Design 3** with proper color selectors
+
+## Key Fixes from v1
+1. **Crash fix**: BottomNav tint uses ColorStateList selector instead of direct color
+2. **Crash fix**: NavHostFragment uses proper `app:navGraph` + `app:defaultNavHost`
+3. **Crash fix**: All fragments use `isAdded()` checks before UI operations
+4. **Crash fix**: ViewBinding removed, safer `findViewById` after `onViewCreated`
+5. **Script → Native**: Removed Python script execution, uses `wpa_cli` etc directly
+
+## Structure
 ```
 ZerFiApp/
-├── app/
-│   ├── build.gradle          (namespace: com.zerfi.app, minSdk 29, targetSdk 36)
-│   ├── src/main/
-│   │   ├── AndroidManifest.xml  (root, wifi, internet, location permissions)
-│   │   ├── java/com/zerfi/app/
-│   │   │   ├── MainActivity.java       (Bottom nav + NavHost)
-│   │   │   ├── ui/fragments/
-│   │   │   │   ├── HomeFragment.java    (Dashboard with root check + quick actions)
-│   │   │   │   ├── ScanFragment.java    (WiFi scanner with shell output)
-│   │   │   │   ├── AttackFragment.java  (Pixie/Brute/PBC attack runner)
-│   │   │   │   └── SessionsFragment.java (Saved sessions viewer)
-│   │   │   └── utils/
-│   │   │       ├── RootShell.java       (Root detection utility)
-│   │   │       └── ShellExecutor.java   (Async root shell command executor)
-│   │   └── res/
-│   │       ├── layout/
-│   │       │   ├── activity_main.xml     (CoordinatorLayout + BottomNavigationView)
-│   │       │   ├── fragment_home.xml     (Material 3 cards dashboard)
-│   │       │   ├── fragment_scan.xml     (Interface input + output console)
-│   │       │   ├── fragment_attack.xml   (Attack mode radio + config + output)
-│   │       │   └── fragment_sessions.xml (RecyclerView for sessions)
-│   │       ├── values/themes.xml        (Material 3 Day theme - Teal seed)
-│   │       ├── values-night/themes.xml  (Material 3 Night theme)
-│   │       ├── values/colors.xml        (Light palette)
-│   │       ├── values-night/colors.xml  (Dark palette)
-│   │       ├── navigation/nav_graph.xml (4 destinations)
-│   │       └── drawable/               (Vector icons: home, scan, attack, sessions)
-│   └── proguard-rules.pro
-├── build.gradle
-├── settings.gradle
+├── app/src/main/
+│   ├── AndroidManifest.xml  (root, wifi, location, internet)
+│   ├── java/com/zerfi/app/
+│   │   ├── MainActivity.java
+│   │   ├── ui/fragments/
+│   │   │   ├── HomeFragment.java     (Root check + quick nav)
+│   │   │   ├── ScanFragment.java     (iw scan via root)
+│   │   │   ├── AttackFragment.java   (wpa_cli Pixie/Brute/PBC)
+│   │   │   └── SessionsFragment.java
+│   │   └── utils/
+│   │       ├── RootShell.java        (id via su)
+│   │       └── ShellExecutor.java    (Async sh -c + output)
+│   └── res/ (Material 3, light/dark, navigation graph)
+├── build.gradle, settings.gradle
 └── gradle/
 ```
 
-## Architecture
-- **Navigation**: Android Navigation Component with BottomNavigationView
-- **UI**: Material Design 3 (Theme.Material3.DayNight.NoActionBar)
-- **Colors**: Teal/Cyan seed (#009688) — Material 3 tonal palette
-- **Shell**: su-based root execution via ProcessBuilder
-- **Theming**: Dynamic light/dark with full Material 3 color roles
+## What App Does
+- **Root check**: `su -c id` → checks uid=0
+- **WiFi Scan**: `iw dev wlan0 scan` via root
+- **Pixie Dust**: `wpa_cli -i wlan0 wps_pin BSSID PIN`
+- **Bruteforce**: `wpa_cli` PIN sequence
+- **PBC**: `wpa_cli -i wlan0 wps_pbc`
 
-## Features
-- Root status check on Home
-- WiFi scan via `iw` command
-- Pixie Dust / Bruteforce / PBC attack modes
-- Real-time terminal output in Material 3 cards
-- Stop running attacks
-
-## Build Info
-- SDK: 36 (compile), 29 (min), 36 (target)
-- AGP: 8.13.0
-- Material: 1.13.0
-- Build command: `cd ZerFiApp && ./gradlew assembleDebug --no-daemon`
-- APK: app/build/outputs/apk/debug/app-debug.apk (15MB)
+## Requirements (Device)
+- Rooted Android (Magisk/KernelSU)
+- WiFi chipset with WPS support
+- Built-in wpa_supplicant (present in all Android)
+- No Termux needed
