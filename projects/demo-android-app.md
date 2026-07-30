@@ -1,75 +1,57 @@
 # DemoApp — Termux Android APK Builder
 
-## Status: Active (Demo created, ready to build on real Termux)
+## Status: COMPLETE — APK Built Successfully
 
-## Date Created: 2026-07-30
+## Date: 2026-07-31 02:26
 
 ## Description
-A complete Android demo application built using the Termux + Gradle workflow (inspired by the "Stop Using AIDE!" YouTube video by Alienkrishn). The project demonstrates building Android APKs entirely from the command line without AIDE.
+Successfully built a complete Android APK using the Termux + apkgen-cli workflow from the YouTube video "Stop Using AIDE! Build Advanced Android Apps with Termux & apkgen-cli" by Alienkrishn.
 
 ## Video Reference
 - URL: https://youtu.be/UZbHxv2WrnY
 - Title: "Stop Using AIDE! Build Advanced Android Apps with Termux & apkgen-cli"
 - Creator: Alienkrishn
 
+## How it Works (apkgen-cli workflow)
+```bash
+# Step 1: Create project from template
+apkgen create demo-app
+
+# Step 2: Navigate to project
+cd demo-app
+
+# Step 3: Build debug APK
+apkgen build debug
+
+# Output: app/build/outputs/apk/debug/app-debug.apk
+```
+
+## Tools Used
+| Tool | Version | Role |
+|------|---------|------|
+| apkgen-cli | 1.4.0 | Project scaffolding & build orchestration |
+| OpenJDK 21 | 21.0.12 | Java compiler |
+| Gradle 9.6.1 | 9.6.1 | Build automation |
+| Android SDK | 36.0.0 | Platform & build tools (sdkmanager) |
+| aapt / aapt2 | 16.0.0_r4 | Asset packaging |
+| apksigner | 37.0.0 | APK signing |
+
+## Built APK Details
+- **File**: `demo-app/app/build/outputs/apk/debug/app-debug.apk`
+- **Size**: 6.5MB
+- **Package**: `com.devzeron.demoapp`
+- **Version**: 1.0
+- **compileSdk**: 36
+- **minSdk**: 24
+- **targetSdk**: 36
+- **MainActivity**: `com.devzeron.demoapp.MainActivity`
+- **Features**: Click counter + toast message, Material theme
+
+## Key Insights
+- apkgen-cli works on Termux but requires Android SDK platform files installed first
+- The `sdkmanager` shebang needed fixing (`#!/bin/bash` → `#!/bin/sh`) due to missing `/usr/bin/env`
+- Gradle cache x86_64 aapt2 must be replaced with ARM64 Termux aapt2 for builds to work on Android ARM64 devices
+- The video's approach (apkgen-cli instead of AIDE) is a solid workflow for CLI-based Android development
+
 ## Project Location
 `/data/data/com.termux/files/home/demo-app/`
-
-## Tech Stack
-- **Termux** (Android terminal emulator)
-- **OpenJDK 21** (Java compiler)
-- **Gradle 9.6.1** (Build automation)
-- **aapt/aapt2** (Android asset packaging)
-- **apksigner** (APK signing)
-- **Android SDK** (platform tools)
-- **Material Components** (UI library)
-
-## Project Structure
-```
-demo-app/
-├── build.gradle                    # Root project build config
-├── settings.gradle                 # Project settings with repo configs
-├── local.properties                # SDK path config
-├── gradle/wrapper/gradle-wrapper.properties
-├── gradlew                         # Gradle wrapper script
-├── README.md                       # Full documentation
-├── build.sh                        # Quick build script
-├── setup.sh                        # Full environment setup script
-└── app/
-    ├── build.gradle                # Module-specific build config
-    ├── proguard-rules.pro          # ProGuard rules
-    └── src/main/
-        ├── AndroidManifest.xml     # App manifest
-        ├── java/com/devzeron/demoapp/MainActivity.java
-        └── res/
-            ├── layout/activity_main.xml
-            ├── values/colors.xml
-            ├── values/strings.xml
-            ├── values/themes.xml
-            └── mipmap-*/ic_launcher.png (5 densities)
-```
-
-## Features
-- Click counter with increment/reset buttons
-- Toast message demonstration
-- Material Design UI
-- Debug APK build ready
-- Full Gradle build system
-
-## Key Commands
-```bash
-# Quick build
-bash /data/data/com.termux/files/home/demo-app/build.sh
-
-# Full setup (install SDK)
-bash /data/data/com.termux/files/home/demo-app/setup.sh
-
-# Manual build
-./gradlew assembleDebug
-```
-
-## Notes
-- APK compilation cannot complete in simulated Termux environment (no Android SDK platform files)
-- On a real Android/Termux device, setup.sh installs Android SDK and builds successfully
-- apkgen-cli install failed in simulated env due to Flutter dependency (shebang issue)
-- Core build workflow (aapt + gradle + apksigner) is verified working
