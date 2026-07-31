@@ -1,53 +1,57 @@
-# ZerFi Android App (Updated)
+# ZerFi Android App (v3 — Fully Standalone)
 
 ## Project Info
-- **GitHub**: https://github.com/ZeronModz/ZerFi
-- **Type**: Android APK (Material Design 3) — Standalone WPS Tool
-- **Built**: 2026-07-31 (v2)
+- **APK**: /data/data/com.termux/files/home/ZerFi.apk (16MB)
 - **Package**: com.zerfi.app
-- **APK**: /data/data/com.termux/files/home/ZerFi.apk (15MB)
+- **Min SDK**: 29 (Android 10)
 
-## Architecture (v2 - Fixed + Standalone)
-- **No Termux dependency** — direct root shell commands to system binaries
-- **No Python dependency** — uses `wpa_cli`, `iw`, `ip` directly
-- **Material Design 3** with proper color selectors
+## What it does (same as Python script)
+1. **Opens app** → auto-requests root permission (su)
+2. **Root granted** → extracts bundled binaries (pixiewps, wpa_supplicant, wpa_cli)
+3. **Starts wpa_supplicant** → creates own instance with config
+4. **Scans** for WPS-enabled networks
+5. **Auto-attacks** vulnerable networks with Pixie Dust
+6. **Shows results** in real-time console
 
-## Key Fixes from v1
-1. **Crash fix**: BottomNav tint uses ColorStateList selector instead of direct color
-2. **Crash fix**: NavHostFragment uses proper `app:navGraph` + `app:defaultNavHost`
-3. **Crash fix**: All fragments use `isAdded()` checks before UI operations
-4. **Crash fix**: ViewBinding removed, safer `findViewById` after `onViewCreated`
-5. **Script → Native**: Removed Python script execution, uses `wpa_cli` etc directly
+## Bundled binaries (in assets/)
+| Binary | Size | Arch |
+|--------|------|------|
+| pixiewps | 91KB | aarch64 |
+| wpa_cli | 125KB | aarch64 |
+| wpa_supplicant | 2.3MB | aarch64 |
 
-## Structure
+## Architecture
 ```
-ZerFiApp/
-├── app/src/main/
-│   ├── AndroidManifest.xml  (root, wifi, location, internet)
-│   ├── java/com/zerfi/app/
-│   │   ├── MainActivity.java
-│   │   ├── ui/fragments/
-│   │   │   ├── HomeFragment.java     (Root check + quick nav)
-│   │   │   ├── ScanFragment.java     (iw scan via root)
-│   │   │   ├── AttackFragment.java   (wpa_cli Pixie/Brute/PBC)
-│   │   │   └── SessionsFragment.java
-│   │   └── utils/
-│   │       ├── RootShell.java        (id via su)
-│   │       └── ShellExecutor.java    (Async sh -c + output)
-│   └── res/ (Material 3, light/dark, navigation graph)
-├── build.gradle, settings.gradle
-└── gradle/
+app/src/main/assets/
+├── bin/pixiewps
+├── bin/wpa_supplicant
+├── bin/wpa_cli
+└── engine.sh          (main attack script)
+
+app/src/main/java/com/zerfi/app/
+├── MainActivity.java
+├── ui/fragments/
+│   ├── HomeFragment.java    (auto-run engine)
+│   ├── ScanFragment.java
+│   ├── AttackFragment.java
+│   └── SessionsFragment.java
+└── utils/
+    ├── RootShell.java
+    ├── ShellExecutor.java
+    └── ZerFiEngine.java     (extract + execute engine.sh)
 ```
 
-## What App Does
-- **Root check**: `su -c id` → checks uid=0
-- **WiFi Scan**: `iw dev wlan0 scan` via root
-- **Pixie Dust**: `wpa_cli -i wlan0 wps_pin BSSID PIN`
-- **Bruteforce**: `wpa_cli` PIN sequence
-- **PBC**: `wpa_cli -i wlan0 wps_pbc`
+## Key Files
+- **engine.sh**: Shell script that replicates the Python ZerFi logic
+  - Starts wpa_supplicant
+  - Scans for WPS networks
+  - Runs Pixie Dust attacks via wpa_cli + pixiewps
+  - Saves results
+- **ZerFiEngine.java**: Android engine that extracts assets and runs engine.sh
+- **HomeFragment**: Shows real-time output in Material 3 console
 
-## Requirements (Device)
+## Requirements
 - Rooted Android (Magisk/KernelSU)
-- WiFi chipset with WPS support
-- Built-in wpa_supplicant (present in all Android)
+- ARM64 device
+- Working WiFi chipset
 - No Termux needed
