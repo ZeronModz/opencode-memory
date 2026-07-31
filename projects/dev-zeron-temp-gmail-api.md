@@ -1,6 +1,6 @@
 # DevZeron Temp Gmail API v1 (Vercel)
 
-## Status: Active (v1.0.0 — Full rebuild + docs website)
+## Status: Active (v1.1.0 — docs website v3: mobile-first animated redesign)
 
 ## Last Updated: 2026-07-31
 
@@ -29,7 +29,7 @@ Temporary Gmail API on Vercel free plan. Dot/plus/mixed/custom/batch alias gener
 ## Files
 - `api/index.py` — main Flask app, all routes
 - `api/aliases.py` — generate()/custom()/batch() logic
-- `public/index.html` — full documentation website (dark dev theme, 6 language tabs curl/Python/Node/PHP/Go/Java, live Playground tester, marquee, SVG icons). Copy buttons read from sibling `<pre>` (no data-copy attrs — HTML quoting bug)
+- `public/index.html` — docs website **v3**: mobile-first redesign. 43 inline SVG sprite icons (49 symbols), hamburger drawer nav + overlay, scroll progress bar, ambient floating glow blobs, animated gradient hero title, glassmorphism terminal + self-made "How it works" mail-flow SVG diagram (animated dashes + bobbing mails), hero animated counters, language marquee with edge fade, stats band with animated counters, card tilt on desktop hover (pointer:fine + no reduced-motion), FAQ accordion, spinner loading state in playground, safe-area padding for notched phones, touch targets ≥44px, prefers-reduced-motion respected. Copy buttons read sibling `<pre>`. 1583 tags, 107KB, HTMLParser clean
 - `vercel.json` — rewrite `/api/(.*)` → `/api/index.py/$1` (new runtime passes destination path; StripRewritePrefix middleware strips `/api/index.py`; `both(*paths)` decorator registers `/path` + `/api/path`)
 - `requirements.txt` — Flask
 - `tests/test_aliases.py` — 8 unit tests
@@ -52,6 +52,7 @@ Temporary Gmail API on Vercel free plan. Dot/plus/mixed/custom/batch alias gener
 - 8/8 unit tests pass
 - Live IMAP read test: READ 200, HEALTH 200 "IMAP connected, INBOX reachable"
 - LIVE DEPLOY (open source auth): docs / 200, health 200, info 200, noauth 401, bad auth 401, generate mixed/custom/batch 200, read 200 (count 2), count 200 (total 306/unread 240), unread 200, format2 X-Gmail-Address 200 — all with `Bearer zeronmodz@gmail.com|vqae nhux pqez izqz`
+- LIVE DEPLOY (docs v3): / 200 (107KB), sprite + drawer + burger present, API generate mixed still 200
 
 ## Design System
 Dark dev theme: bg #020617, accent green #22C55E, Inter + JetBrains Mono. Docs site single HTML, tabs, responsive.
