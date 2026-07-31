@@ -69,3 +69,11 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 ## Next Steps
 - DONE: open-source auth deployed + docs site live + README updated to `Bearer <email>|<app-pass>` format
 - Optional: GitHub public repo e push korle users ei open-source API nije deploy korte parbe
+
+## v4 — Material Design 3 rebuild (2026-07-31, Session 5)
+- `public/index.html` fully rewritten with @material/web@2.5.0 Web Components (~29 component types), CDN via esm.run import map, M3 dynamic theming (seed #22C55E) + light/dark toggle + localStorage.
+- Mobile-first single column (fixes mobile "one side empty"), bottom md-navigation-bar, desktop persistent md-navigation-drawer, modal drawer on mobile.
+- Playground upgraded (slider/checkbox/radio/switch/select/text-fields/progress), endpoint filter chips + search, reference md-tabs + language md-menu, App Password md-dialog, back-to-top md-fab.
+- Old custom 49-icon SVG sprite removed (Material Symbols icons used instead).
+- Live: https://dev-zeron-temp-gmail-api-v1.vercel.app (verified 200, API intact, tests 8/8).
+- Deploy cmd: `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js deploy --prod --yes`
