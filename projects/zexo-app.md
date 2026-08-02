@@ -1,14 +1,14 @@
 # Zexo — Telegram Bot Client (Android, C++ core)
 
-## Status: v1 COMPLETE — APK Built ✓
+## Status: v2 COMPLETE — APK Built ✓
 
-## Date: 2026-08-02 23:51
+## Date: 2026-08-03 00:13
 
 ## Overview
 Android app **Zexo** — Telegram Bot Client. Login with bot token, chat with any chat, edit/delete messages, bot profile editing, webhook management. Inspired by ir.ilmili.telegraph but for BOT accounts (not user accounts).
 
 ## Project Info
-- **APK**: `/data/data/com.termux/files/home/Zexo.apk` (8.1MB, debug)
+- **APK**: `/data/data/com.termux/files/home/Zexo.apk` (9.7MB, debug, v2)
 - **Also**: `/storage/emulated/0/Download/Zexo.apk`
 - **Package**: `com.devzeron.zexo`
 - **App name**: Zexo
@@ -53,6 +53,23 @@ Android app **Zexo** — Telegram Bot Client. Login with bot token, chat with an
 | getWebhookInfo | nativeGetWebhookInfo |
 | deleteWebhook | nativeDeleteWebhook |
 | answerCallbackQuery | nativeAnswerCallback |
+| getUserProfilePhotos | nativeGetUserProfilePhotos |
+| getFile | nativeGetFile |
+| sendPhoto (URL) | nativeSendPhotoByUrl |
+| sendPhoto (file_id) | nativeSendPhotoByFileId |
+| forwardMessage | nativeForwardMessage |
+| copyMessage | nativeCopyMessage |
+| sendChatAction | nativeSendChatAction |
+| pinChatMessage | nativePinChatMessage |
+| unpinChatMessage | nativeUnpinChatMessage |
+| banChatMember | nativeBanChatMember |
+| unbanChatMember | nativeUnbanChatMember |
+| leaveChat | nativeLeaveChat |
+| deleteMessages | nativeDeleteMessages(LongArray) |
+| getChatMember | nativeGetChatMember |
+| getChatAdministrators | nativeGetChatAdministrators |
+| setMyProfilePhoto | nativeSetMyProfilePhoto |
+| setChatTitle | nativeSetChatTitle |
 
 ## Build Commands
 ```bash
@@ -76,11 +93,32 @@ cd /data/data/com.termux/files/home/zexo
 - [x] Dark mode toggle, silent send toggle
 - [x] Logout clears session
 
-## Next Steps (v2 ideas)
-- Bot profile photo (getUserProfilePhotos + sendPhoto via multipart)
-- Media send (photos via multipart — needs C++ multipart builder)
-- Edit message via keyboard callback
-- Forward messages, reply threads
-- Persist chats/messages locally (JSON file)
-- Splash screen, app icon custom
-- Notification service for new messages
+## Features Done (v2)
+- [x] Session persistence — no re-login after exit (SplashActivity + AccountManager)
+- [x] Multi-account (unlimited) with account bar + switcher dialog + add/remove
+- [x] Disk persistence of chats/messages per account (filesDir/accounts/<botId>/data.json)
+- [x] Single poller singleton (UpdatePoller) — fixes race/missing incoming messages
+- [x] Bot & chat profile photos (getUserProfilePhotos → getFile → downloadToFile → crop circle, AvatarLoader)
+- [x] Chat Profile screen (avatar, name, username, type/members chips, bio, ban/leave)
+- [x] Photo send (gallery picker → uploadMultipart → sendPhoto) with caption
+- [x] Message actions: reply, copy, forward, pin, edit, delete
+- [x] setMyProfilePhoto from gallery
+- [x] Status bar / nav bar themed icons (windowLightStatusBar + surface color)
+- [x] Fixed icons (proper Material robot/chat icons)
+- [x] Theme applied to splash/login/account bar
+
+## v2 Fixes (root causes)
+- LoginActivity was launcher → re-login on every start → SplashActivity routes by stored account
+- Multiple polling threads (MainActivity + ChatActivity) → 409 race, lost updates → UpdatePoller singleton
+- In-memory store → lost on restart → TelegramStore disk persistence
+- Missing `app:` namespace in activity_splash.xml → resource link error
+- Missing `@color/white`, `ShapeAppearanceOverlay.Material3.Corner.Full` style → added
+- AvatarLoader.Callback was `interface` (not SAM) → lambda calls failed → `fun interface`
+- `setBotId` was removed from new TelegramStore → removed stale call in LoginActivity
+
+## Next Steps (v3 ideas)
+- Notification service / background poller
+- Vercel API for bot proxy / webhook cache (deployment not started)
+- Reply-thread / topics support, voice/audio/media (document, video) send
+- Scheduled messages, drafts
+- Custom app icon
