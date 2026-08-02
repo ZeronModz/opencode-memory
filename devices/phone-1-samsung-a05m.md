@@ -1,4 +1,4 @@
-# Phone 1 — Samsung Galaxy A05m
+# Phone 2 — Samsung Galaxy A05m (SECOND PHONE)
 
 ## Device Details
 - **Manufacturer:** Samsung
@@ -10,6 +10,10 @@
 ## First Connected
 - 2026-07-30 — GitHub + opencode memory setup
 
+## Status
+- **SECOND PHONE** — 2026-08-02: user declare korlo OPPO CPH2817 e MAIN device, ei Samsung A05m ekhon second phone
+- Ager "primary phone" status ar nei
+
 ## Notes
-- Primary phone for development
 - Termux + opencode full setup
+- Memory repo same (ZeronModz/opencode-memory.git) — 2 phone e use
