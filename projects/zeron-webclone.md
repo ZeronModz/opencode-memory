@@ -1,7 +1,7 @@
 # 🧬 Zeron Web Clone Engine
 
 > AI-powered website cloner — clone any website to exact ZIP (web app + Telegram bot).
-> Status: **BUILT & TESTED locally** (2026-08-03). Vercel deploy pending.
+> Status: **DEPLOYED** (2026-08-04). Vercel production live.
 
 ## What It Does
 - User gives any website URL → engine downloads full site, preserves EXACT folder structure, rewrites all paths to offline-relative, AI analyzes & auto-fixes code, injects brand footer, packs ZIP, returns download.
@@ -31,7 +31,7 @@ public/index.html   # landing page
 - `OPENROUTER_API_KEY` = sk-or-v1-2792c97c... (user's key)
 - `OPENROUTER_MODEL` = nvidia/nemotron-3.5-content-safety:free (user requested)
 - `OPENROUTER_FALLBACK_MODELS` = nvidia/nemotron-3-super-120b-a12b:free,nvidia/nemotron-3-nano-30b-a3b:free,openrouter/free
-- `TELEGRAM_BOT_TOKEN` = (needed for bot)
+- `TELEGRAM_BOT_TOKEN` = ✅ set (8841923436:...)
 - `MAX_PAGES` = 5 (deep-clone limit)
 
 ## AI Fallback Chain (IMPORTANT LESSON)
@@ -44,13 +44,12 @@ User's requested model `nvidia/nemotron-3.5-content-safety:free` is a **content-
 - Brand footer `Clone By @DevZeron` + CSS/JS comment headers + meta generator injected ✅
 - AI found real issues (missing meta description, redundant charset) & auto-fixed meta ✅
 
-## Vercel Deploy (todo)
-Vercel CLI broken in Termux (`/usr/bin/env: no such file or directory`). Deploy via GitHub:
-1. push zeron-webclone to GitHub
-2. vercel.com → New Project → import repo
-3. set env vars above
-4. deploy
-5. optional bot: `TELEGRAM_BOT_TOKEN=xxx node bot/setup.js https://APP.vercel.app/api/telegram`
+## Vercel Deploy (done ✅)
+- Deployed via Vercel CLI (using `node` workaround for broken shebang)
+- Project: `dev-zeron/zeron-webclone`
+- Production URL: `https://zeron-webclone.vercel.app`
+- Webhook set: `https://zeron-webclone.vercel.app/api/telegram`
+- TELEGRAM_BOT_TOKEN configured in Vercel env vars
 
 ## Limits / Notes
 - Vercel Hobby: function timeout ~10-60s, response ~4.5-6MB → heavy sites may exceed. Bot on VPS/PC (`node bot/poll.js`) = unlimited.
