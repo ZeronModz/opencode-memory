@@ -107,3 +107,9 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 - Locked zoom (user-scalable=no) + overflow-x guards → centered layout at any zoom level.
 - New #docs section: interactive per-endpoint × per-language (curl/Python/Node/PHP/JS) docs with params + response tables; PROMPT builder to create a website from the API.
 - Palette extended (g4/g5/g6, animated gradient), aurora hero glows, button sheen, story-ring social bar, reduced-motion respected.
+
+## v2.4 — VS Code-style editor, overflow fixes, better mobile menu (2026-08-07, round 6)
+- Docs code → real editor (traffic lights, filename, line numbers, syntax highlight, copy-from-data-snippet). Hero terminal dark editor + status bar. Playground editor chrome.
+- Endpoint table reflow to kill card overflow; mobile menu = slide+backdrop+lock-scroll.
+- Generic pre token classes added so JSON highlight (playground) still colors.
+- Live; HTML/JS validated; smoke test OK; 108K page.
