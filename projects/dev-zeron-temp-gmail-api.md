@@ -96,3 +96,9 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 ## v2.1 — Mobile responsive fix + features (2026-08-07, Session 6 round 2)
 - Fixed mobile mess (hero-grid was 2-col → clipped on phones). Now 1-col <=899px, full-width CTAs, clamp() code font, `pre{overflow-x:auto}`, reduced padding, safe-area insets.
 - Added: light/dark toggle (data-theme + dz_theme persist), live server-status pill (/api/health), back-to-top FAB, "How it works" 3-step section, playground "remember key" (opt-in localStorage) + "clear response". Page now 69.5KB, HTML/JS validated, live.
+
+## v2.2 — Top header redesign + banner + hero art (2026-08-07, Session 6 round 4)
+- New header: top gradient ribbon, stacked logo (mark + logo-txt small), `.top-right` control group, sys-pill as button with animated dot (online/offline ping), Get-started hidden on mobile, new burger icon.
+- CTA became a gradient banner card (rounded, glass across CTA, floating blobs + key medallion).
+- Hero terminal card got Instagram-style floating chips (verified / key_issued / alias ready) with conic rings.
+- CSS 3 color vars reused (no new palette). HTML/JS validated; live deploy done; /api/health OK.
