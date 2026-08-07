@@ -47,3 +47,12 @@ Future todo: cookie-based reliable resolver + railway volume for bot_data.json.
   `railway up --yes --service TeraBox69xBot` from project root.
 - 409 Conflict race on swap is transient (old replica dies); verify with `railway logs | grep getUpdates 200`.
 - 2026-08-08 01:57 two deploys done (builds 727af422..., c7e7de87...); new code LIVE (getUpdates 200, admin callbacks 200).
+
+## Player still-not-playing + download hang fix (2026-08-08 02:4x)
+- Root cause likely: iteraplay dlink requires session cookies; our player proxy + in-bot download were STATELESS -> Cloudflare/TeraBox hang.
+- player.py: added STREAM_COOKIES dict + _up_headers() (injects Cookie header). Used in /v /dl /meta /thumb + ffmpeg -headers Cookie.
+- bot.py: _itera_resolve() now pushes its session cookies into player_server.STREAM_COOKIES after warmup. _download_stream() also sends those cookies.
+- Player overlay .ov now pointer-events:none so it never blocks native video controls.
+- Admin panel redesigned to classic emoji + 2-buttons-per-row + fancy fonts. Planned -5 button added.
+- REDEEM/GIFT GENERATE now insta (one-click default): redeem = 5 uses/6h/+3dl; gift = 20 claims/+3h unlm + returns real t.me link. Custom typing via 🎛 custom: redeem `mUses,hours,extra_dl,unl_hours`; gift `claims,extra_dl,unl_hours`.
+- New helper _make_code(prefix,n). Deployed build 79d78953 (getUpdates 200 OK).
