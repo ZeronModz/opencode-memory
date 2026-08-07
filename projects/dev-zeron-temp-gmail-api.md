@@ -102,3 +102,8 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 - CTA became a gradient banner card (rounded, glass across CTA, floating blobs + key medallion).
 - Hero terminal card got Instagram-style floating chips (verified / key_issued / alias ready) with conic rings.
 - CSS 3 color vars reused (no new palette). HTML/JS validated; live deploy done; /api/health OK.
+
+## v2.3 — Zoom-lock, full API docs + build-prompt, richer visuals (2026-08-07, round 5)
+- Locked zoom (user-scalable=no) + overflow-x guards → centered layout at any zoom level.
+- New #docs section: interactive per-endpoint × per-language (curl/Python/Node/PHP/JS) docs with params + response tables; PROMPT builder to create a website from the API.
+- Palette extended (g4/g5/g6, animated gradient), aurora hero glows, button sheen, story-ring social bar, reduced-motion respected.
