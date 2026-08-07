@@ -27,3 +27,10 @@
 - Railway filesystem is EPHEMERAL: bot_data.json downloads/ reset cada restart. Could add volume/in found a reliable provider.
 
 Future todo: cookie-based reliable resolver + railway volume for bot_data.json.
+## Big fix: iteraplay.com provider (2026-08-08)
+- Found drdevstudio/Terabox-Video-Downloader-and-Stream- repo: THEY scrape iteraplay.com via POST /api/download, rotation cookies+proxies.
+- Discovered iteraplay works with PLAIN requests: GET https://iteraplay.com/ (warmup) => session_id + __secure_token cookies => POST /api/download {"url":link} => JSON with fast_stream_url (quality m3u8 dict) + normal_dlink.
+- No login cookie/proxy  needed for few calls. Rate limit = usage_limit (429) per IP -> rotation via proxies needed for heavy use.
+- Integrated _itera_resolve() as PRIMARY in bot get_terabox_stream (3 tries) -> fallback mn-bots worker hosts (_resolve_host with validation retry).
+- UA changed to Windows Chrome 124. no new deps (requests only). Deployed.
+- Caveat: Railway datacenter IP may get Cloudflare block on iteraplay; mn-bots fallback covers intermittent. For heavy production, add proxy rotation like the repo.
