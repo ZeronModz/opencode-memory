@@ -56,3 +56,33 @@ Future todo: cookie-based reliable resolver + railway volume for bot_data.json.
 - Admin panel redesigned to classic emoji + 2-buttons-per-row + fancy fonts. Planned -5 button added.
 - REDEEM/GIFT GENERATE now insta (one-click default): redeem = 5 uses/6h/+3dl; gift = 20 claims/+3h unlm + returns real t.me link. Custom typing via 🎛 custom: redeem `mUses,hours,extra_dl,unl_hours`; gift `claims,extra_dl,unl_hours`.
 - New helper _make_code(prefix,n). Deployed build 79d78953 (getUpdates 200 OK).
+
+## Player rework ~everything 03:1x-05:0x (2026-08-08) — FINAL WORKING STATE
+- ROOT CAUSE of "video never plays across every player": resolved stream can be EITHER direct mp4 dlink (iteraplay normal_dlink/dlink/direct_link) OR HLS m3u8 (fast_stream_url / mn-bots media_url). All players before fed ONE type -> always stuck on the other.
+- BACKEND JS CLASSIC: feed browser a SAME-ORIGIN url only (proxied), never raw CDN dlink.
+  Routes in player.py:
+  - /type?url= -> probe first 2KB w/ _up_headers -> {"kind":"hls"|"direct"|"err","size","type"}. HLS = body starts #EXTM3U; direct checked not starting "{".
+  - /px?url= -> passthrough proxy (_proxy_out) for m3u8 text + segments + direct file (+ Range forward for mp4 seeking). Same-origin = NO CORS.
+  - /hls.min.js -> serves hls.js 1.5.13 (413181 bytes) BASE64-EMBEDDED in player.py (line _HLS_JS = b64decode...). Dockerfile ONLY ships bot.py+player.py so separate files never reach Railway (that's why a standalone hls.min.js file served 0B).
+  - /dl = browser full download proxy; /lst+/st+parallel segments removed from use (leftover).
+- BOT passes DIRECT/STREAM URL as /play?url=<direct_url>&title=<fname> (quote'd, enc). Player PAGE boot(decoded url) -> engineVideo(v,url):
+  kind=hls -> Hls.js (xhrSetup rewrites EVERY request /px?url=<original>) attachMedia -> incremental buffered play (YouTube style);
+  kind=direct -> v.src=/px?url=<url> native + full; autoplay muted fallback.
+  final.hide loader on canplay/playing/error -> show. Buffer strip % from video.buffered.
+- PAGE (2026-08-08 05:5x, USER'S OWN DESIGN "ZERON PLAYER"): Archivo Black/JetBrains Mono, black/yellow neo, school-frame style, grid bg, thick 6px frames + offset shadows, credits @CodeDevZeron/@DevZeron, Telegram MiniApp SDK fullscreen + safe-area + disableVerticalSwipes, long-press/contextmenu/haptic disabled via user-select:none + contextmenu/selectstart/copy/dragstart prevent + [hidden] attr pattern, No URL? -> landing with manual url/title inputs. Player = Video.js v10 (@videojs/html cdn) with video-player/video-skin wrappers, plus our engine (engineVideo) + loader (loading-bars) + BUFFERED strip.
+  Local </script> additions by me: engineVideo(fetch /type -> hls/direct through /px + hls.js) + local /hls.min.js include + fallback CSS (.player-mount video{width:height ...}).
+- Deploys: df829680 (adaptive), 24cbef76 (ZERON PLAYER v1), 9da0ad08 (v3 w/ buffer-strip+long-press block). LIVE verified: /play markers + /hls.min.js 200 413181B.
+
+## Embedded-base64 DEBUG BUG (lesson)
+- python embed script replacing try/open block ate UPSTREAM_HEADERS dict (UA..STREAM_COOKIES) -> NameError -> every probe err/403. Always recompile + local smoke probe after splicing big base64. Local selftest (PORT=879x) validated: /play 200 page; /type hls->application/x-mpegURL; /type mp4->direct 788493 video/mp4 (googleapis 403 geo block; w3schools OK); /px hls #EXTM3U text; /px mp4 full ftyp bytes; cat . FIXED.
+- ALSO wildcard: at /proxy err probe first 2K read.
+
+## STILL TODO / known risk
+- /dl browser button proxies RAW url (m3u8 -> downloads playlist text not video). In-bot download (send_dl_cb) handles HLS via ffmpeg _download_stream. If user needs browser-download to give MP4, /dl must be HLS->mp4 merge/transcode route (ffmpeg pipe or segment concat).
+- iteraplay rate-limit 429 per IP; Railway datacenter IP Cloudflare risk; cookies injected via STREAM_COOKIES after warmup.
+- Railway FS ephemeral (bot_data.json resets). Not volumed.
+- Dockerfile only COPY bot.py+player.py -> all new supporting files MUST be base64-embedded in player.py or added to Dockerfile COPY.
+
+## DEPLOY (MUST)
+- From /storage/emulated/0/my-projects/terabox-downloader: `railway up --yes --service TeraBox69xBot` (fresh upload; redeploy reuses old build). Verify via curl player page + /hls.min.js size.
+MD
