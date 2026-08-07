@@ -92,3 +92,7 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 - **Gotchas**: (1) `request.json` on form POST → 415 (use request.is_json guard). (2) Firebase path can't contain `.` → sha1hex uid. (3) `%40` in path keeps literal (safe_address rejects without @) — email in path must be plain `@`. (4) Flask `both()` dropped `/api` rule in rewrite → re-added. (5) index imports top-level `firebase`/`crypto` (sys.path=api/) ≠ `api.firebase` — patch module for tests via `module.firebase`.
 - **⚠️ SECURITY TODO for Hasan**: Firebase RTDB rules currently open (anyone with public apiKey could write). Set `firebase.rules.json` (deny users/keys) + add `FIREBASE_DATABASE_SECRET` env on Vercel, or restrict rules to the server. README documents it.
 - Deploy cmd: `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js deploy --prod --yes`
+
+## v2.1 — Mobile responsive fix + features (2026-08-07, Session 6 round 2)
+- Fixed mobile mess (hero-grid was 2-col → clipped on phones). Now 1-col <=899px, full-width CTAs, clamp() code font, `pre{overflow-x:auto}`, reduced padding, safe-area insets.
+- Added: light/dark toggle (data-theme + dz_theme persist), live server-status pill (/api/health), back-to-top FAB, "How it works" 3-step section, playground "remember key" (opt-in localStorage) + "clear response". Page now 69.5KB, HTML/JS validated, live.
