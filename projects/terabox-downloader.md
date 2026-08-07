@@ -34,3 +34,16 @@ Future todo: cookie-based reliable resolver + railway volume for bot_data.json.
 - Integrated _itera_resolve() as PRIMARY in bot get_terabox_stream (3 tries) -> fallback mn-bots worker hosts (_resolve_host with validation retry).
 - UA changed to Windows Chrome 124. no new deps (requests only). Deployed.
 - Caveat: Railway datacenter IP may get Cloudflare block on iteraplay; mn-bots fallback covers intermittent. For heavy production, add proxy rotation like the repo.
+
+## Admin v2 + redeem/gift + player fix (2026-08-08)
+- PLAYER fix: custom-controls page stalled -> rewrote player.py PAGE to NATIVE video controls (guaranteed gesture playback) + modern light/glass design, poster=real ffmpeg frame (/thumb), buffering overlay %, top brand, DOWNLOAD for me button, @DevZeron credit. server_version=TeraUltra/1.0.
+- DOWNLOAD-IN-BOT fix: was URL-document (Telegram server refetch, flaky). Now send_dl_cb streams direct link to temp file (disk-safe _download_stream) then sends real file via local API. Removed double use_download (card already counts).
+- FREE PLAN adjustable: DB cfg.free_downloads; free_quota()/save_free_quota(); eff_quota()=free+bonus_downloads. All quota text now eff-aware.
+- User model: bonus_downloads, redeemed added.
+- Admin v2 panel (/admin): STATS, USERS (paged clickable -> per-user: +1/+5/+20 dl, UNLIMITED duration 2h/12h/24h/3d/7d/forever, BAN/UNBAN/RESET), GRANT (type id), REDEEM (gen/list/revoke), GIFT (gen/list), FREE PLAN (-1/0/+1/+5/exact), SEARCH (full user info), BROADCAST, INFO.
+- REDEEM code: /redeem <CODE>; admin gen format `maxuses,hours_valid,extra_dl,unl_hours` e.g. `20,24,10,0`; expiry time-based; per-user once; tracked DB.redeem.
+- GIFT link: admin gen `max_claims,extra_dl,unl_hours`; users claim via t.me/<bot>?start=gift_<token>; distinct claimants enforced DB.gift.
+- Deployment commands (MUST use fresh upload, redeploy reuses old build):
+  `railway up --yes --service TeraBox69xBot` from project root.
+- 409 Conflict race on swap is transient (old replica dies); verify with `railway logs | grep getUpdates 200`.
+- 2026-08-08 01:57 two deploys done (builds 727af422..., c7e7de87...); new code LIVE (getUpdates 200, admin callbacks 200).
