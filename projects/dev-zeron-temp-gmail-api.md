@@ -113,3 +113,8 @@ Run as `node /data/data/com.termux/files/usr/lib/node_modules/vercel/dist/vc.js`
 - Endpoint table reflow to kill card overflow; mobile menu = slide+backdrop+lock-scroll.
 - Generic pre token classes added so JSON highlight (playground) still colors.
 - Live; HTML/JS validated; smoke test OK; 108K page.
+
+## v2.5 — HTML body fix (2026-08-08)
+- Problem: email body HTML hoile `body` empty "" ashe. Root cause: `body()` only scanned `text/plain` parts.
+- Fix `api/index.py`: `body()` now falls back to `text/html` (stripped via `_strip_html()` → readable text), plus new `body_html` field with raw HTML. Helpers: `_walk_parts()`, `_decoded_part()`. `from html import unescape`.
+- Verified locally (HTML-only / plain / empty). Deploy pending user OK.
