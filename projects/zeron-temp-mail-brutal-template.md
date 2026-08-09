@@ -1,37 +1,49 @@
-# Zeron Temp Mail — Brutalist Template (Website)
+# ZERON TEMP MAIL — brutal template (real app)
 
-## Status: Active · Complete v1.0
-## Created: 2026-08-09 (Session 2026-08-09)
-## Location: `/data/data/com.termux/files/home/zeron-temp-mail-brutal-template/`
+## Status: Active v2 (real temp-mail app, deployed)
+## Last Updated: 2026-08-09 23:15
+## Location
+`/data/data/com.termux/files/home/zeron-temp-mail-brutal-template/`
 
 ## What This Is
-DevZeron Temp Gmail API v2 (Vercel) er sob endpoint nia **single-file brutalist template website**. User shudhu app.js er TEMPLATE_CONFIG e API_KEY change kore je kono static host e deploy korlei hobe.
+Working temp-mail web app (temp-mail.org style) — NOT a docs/API-page anymore.
+- Visitor load → auto random alias → inbox live → read OTP → search → delete.
+- Brutalist design, **mobile-first**, all devices/screens. 0 desktop-centrism.
+- API key **server-side**: Vercel env var `ZERON_API_KEY`, never in client/repo.
 
-## Design System (applied)
-- Palette: bg #F2EDE4 · ink #0b0b0b · red #ff2a00 · yellow #ffd60a · green #12b84a
-- Type: Archivo Black / Inter / JetBrains Mono (Google Fonts CDN)
-- Rules: radius 0 suffix, 2-3px black borders, hard offset shadows (6px 6px 0), uppercase mono meta, marquee, asymmetric hero, exposed grid (border-collapse).
-- Trends 2026 (researched): tactile brutalism, typography-as-interface, bento grid, chromatic extremes, prefers-reduced-motion.
+## Links
+- Repo: https://github.com/ZeronModz/zeron-temp-mail-brutal-template
+- Live: https://zeron-temp-mail-brutal-template.vercel.app
+- Upstream API: https://dev-zeron-temp-gmail-api-v1.vercel.app (v2 key-based)
 
 ## Files
-- `index.html` — full site (~35KB): nav, marquee, hero (live health dot + terminal + stats), how-it-works bento, endpoint matrix (15 endpoints: auth 3 / generate 5 / read 4 / manage 3 / system 2), dark playground (request builder + response panel), register panel, response-format sample, HTTP status table, security cards, FAQ accordion, footer, config drawer (API_BASE+API_KEY, localStorage), toast, back-to-top.
-- `app.js` — logic + `TEMPLATE_CONFIG = { API_BASE, API_KEY }` (publish box). Complete ENDPOINTS registry (params/query per endpoint + ex values, desc, resp fields). Functions: renderMatrix, renderPlaygroundSelects (group filter chips), fieldBox (dynamic inputs, select for type), buildUrl (path <param> + query), run (fetch + Bearer key), highlightJson (escaped-text regex), healthCheck, register POST, FAQ, config drawer save.
-- `README.md` — publish guide + endpoint ref table.
+- `index.html` — brutalist mobile-first UI (no framework, ~40KB, all CSS inline)
+- `app.js` — client logic (proxy-first, direct fallback w/ standalone key, localStorage)
+- `api/index.js` — Vercel serverless proxy (env key inject, POST /api JSON `{path,query}`)
+- `README.md` — shieldcn badge stats + env var guide + API ref
 
-## Auth
-`Authorization: Bearer key_xxxx` (alt: `X-API-Key`). Register: POST /api/register JSON {email, pass} → data.key.
+## Env vars (host only)
+- `ZERON_API_KEY` = `key_EnsATw-vmIygEqHRTkvNAMmX7NNwDrI6BBZxl78lF0E` (registered 2026-08-09 for zeronmodz@gmail.com + app pass; PERMANENT in Firebase)
+- `ZERON_API_BASE` optional (default upstream)
 
-## Verification (2026-08-09)
-- node --check app.js OK; HTMLParser 0 errors; JS ids all matched.
-- VM e2e: config-from-localStorage → run generate/mixed with key → fetch → status pill 200 OK + highlighted JSON PASS.
-- Live API probes: health 200, info groups match, no-auth/bad-key → 401 JSON.
+## Proxy contract (frontend → /api)
+POST /api { "path":"generate/mixed" | "read/<email>", "query":{...}, "method", "data" }
+Proxy adds `Authorization: Bearer <env key>`. Client sends NO auth.
+Frontend tries /api → 404/405 → fallback direct (standalone key from CONFIG).
 
-## Gotchas / Known
-- Live server `/api/register` → 500 (HTML) for NON-@gmail.com emails (clean_email PermissionError unhandled). Valid @gmail.com → proper 401 JSON (covered by template).
-- Playground mixed endpoint has no params → paramBox intentionally empty.
-- `S` is module-scoped var (stateNow()); config change → refreshKeyUI + renderParams + updateReq + healthCheck.
+## Critical gotchas (do NOT re-break)
+1. **Email in API path MUST keep plain `@`** (not %40). Minus `%2B` korleo accept, but pathEnc() keeps @ + . _ chars raw karon `+` alias server accept kore. `encodeURIComponent(email)` -> 500 "Invalid mailbox address". Use pathEnc().
+2. app.js MUST have exactly one `function $(id){...}` — a 2026-08-09 edit deleted it accidentally and broke the whole site (`$ is not defined`). Smoke #require catches it.
+3. `readby/<email>/<text>` NEEDS text — without it → 404 Route not found.
+4. `/api/read` returns newest-first, `body` = text/plain only (HTML-only → empty; UI shows fallback note).
+5. Vercel CLI on Termux: `node /data/.../usr/lib/node_modules/vercel/dist/vc.js deploy --prod --yes`.
+6. Vercel zero-config: public files + `api/` folder function deploy together normally.
 
-## Dev Notes (for future edits)
-- CONFIG drawer localStorage key: `zzer-config` ({base, key}).
-- To change default key: edit TEMPLATE_CONFIG at top of app.js (2 lines) — that's the only "template-must-edit" spot.
-- Deploy: any static host. No build step.
+## Verified (2026-08-09)
+- Live proxy: health/generate/read/readby all 200 via POST /api without client key.
+- Browser flow simulation (headless smoke): init→generate→list render→reader OK.
+- HTML parser clean, node --check clean on all JS.
+- GitHub main pushed (d101b74), Vercel prod aliased to base URL.
+
+## Next ideas (user may ask)
+- Auto-refresh interval settings, custom alias input, inbox all-clear button, dark theme, React/Svelte ports.
