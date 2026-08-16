@@ -34,3 +34,8 @@ Deps: requests, colorama, pycryptodome, protobuf.
 
 ## History
 - 2026-08-16: single-JWT → multi-account JSON file + fresh JWT refetch + dynamic color UI (session 2026-08-16).
+- 2026-08-16 V2: true follow detection (response `info` = FOLLOWED, `fail_info` = NOT FOLLOWED) + `history/` folder e per-run JSON (run_YYYYMMDD_HHMMSS.json: tokens, status, responses, summary).
+
+## Follow Success = Check
+- HTTP 200 NOUCHIT na. Proto parse → `info` present & no fail_info → FOLLOWED.
+- `fail_info` (e.g. `BR_WORKSHOP_ALREADY_FOLLOWED`) → NOT FOLLOWED (counts as failed).
