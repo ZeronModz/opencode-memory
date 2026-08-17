@@ -32,7 +32,7 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - /lockmsg → auto open overlay settings + blink fullscreen.
   - /maxvol → + INTERRUPTION_FILTER_ALL (DND off).
   - KeepAlive 5min → 3min; boot also schedules keepalive.
-- **V5 (2026-08-17):** `/lockmsg` overlay → modern draggable gradient bubble (edge-snap chat-head style), LIVE badge blink, programmatic LinearLayout (no XML), FLAG_LAYOUT_NO_LIMITS, NOT_TOUCHABLE removed for drag. Compile clean (29 classes).
+- **V5 (2026-08-17):** `/lockmsg` overlay → modern draggable gradient bubble (edge-snap chat-head style), LIVE badge blink, programmatic LinearLayout (no XML), FLAG_LAYOUT_NO_LIMITS, NOT_TOUCHABLE removed for drag. Compile clean (29 classes). Fixed Sketchware "effectively final" error via `final fRoot/fLp` aliases in OnTouchListener → clean 61 class.
 
 ## Build state
 - Compile check: javac (android-34.jar + okhttp/okio, source 1.8) → 29 classes clean.
