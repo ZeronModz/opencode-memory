@@ -1,12 +1,12 @@
 # 🌐 ZeronRemote — Website + Live Dashboard + Server Remote Control + Anti-Theft
 
-**Status:** 🟢 LIVE & DEPLOYED. Server v3.2 (static pages) + Android Telegram bot + web control. Full remote control + anti-theft system. Latest: V8.0 (4 new web apps + background features fix).
+**Status:** 🟢 LIVE & DEPLOYED. Server v5.0 (remote control web app + /acc /remoteweb) + Android Telegram bot + web control. Full remote control + anti-theft system.
 
 ## Live Info
 - **Server:** `https://zeronremote-production.up.railway.app` (Railway, service `zeronremote`)
 - **Device key:** `zrn-3409b9fac69f`
-- **Views (static):** `/` → `/?view=hub` | `cam` (+`&face=front|back`) | `screen` | `files` | `sms` | `applist` | `contactlist` | `callhist` | `gallery`
-- **Bot:** `/livecam`, `/filesweb`, `/sharescreen`, `/apps`, `/contacts`, `/callhist`, `/gallery` → web-app buttons
+- **Views (static):** `/` → `/?view=hub` | `cam` (+`&face=front|back`) | `screen` | `control` | `files` | `sms` | `applist` | `contactlist` | `callhist` | `gallery`
+- **Bot:** `/livecam`, `/filesweb`, `/sharescreen`, `/apps`, `/contacts`, `/callhist`, `/gallery`, `/remoteweb` (🕹️ remote control web app), `/acc` (accessibility setup + open settings, 900ms delayed via public wrapper) → web-app buttons
 - **Web static:** `public/{hub,cam,screen,files,sms,applist,contactlist,callhist,gallery}.html` + `app.css` (Material 3 green, prim rgb(177 209 138)) + `common.js` + `icons.svg` (custom sprite, ZERO emoji)
 
 ## Server endpoints (all ?k=KEY)
@@ -23,6 +23,7 @@
 |`GET /api/sys`|lastSeen/now (heartbeat + poll both bump)|
 
 ## Page design (public/, Material 3 dark)
+- **control.html** — v5.0 remote control: full-bleed live screen + touch overlay (tap→`tap x y`, drag→`swipe`, toDev() pixel map), bottom bar volup/home/recents/back/voldown + notifpanel/screenshot/type/start-stop share, typer (`/type`), accbar warning. icons+ i-bell, i-keyboard.
 - **cam.html** — premium: corner brackets, LIVE blink pill, Selfie/Rear cards, stream health, MJPEG fullscreen. No appbar/bnav.
 - **files.html** — v4.4: header floating (env+82px), `<--toph:148px`, compact 560px centered, **dedicated scroll container**. wrap absolute top env+148px bottom 0 overflow-y:auto, body overflow hidden, touch-action pan-y, padding 0 14px 120px. Preview lightbox + bottom sheet (Send to TG /tgdl, Zip /tgzip, Download, Close). pollDone stops reload loop. Grid/list toggle, breadcrumbs, search, skeleton.
 - **applist.html** — search, app name/pkg/version, permission chips (granted/denied/total), expandable perm list, letter avatars. Data via `/api/data?key=apps` (device buildAppsJson push).
