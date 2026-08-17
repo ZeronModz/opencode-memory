@@ -12,6 +12,9 @@
 ## Server endpoints (all ?k=KEY)
 |Endpoint|Purpose|
 |---|---|
+|`/api/keygen?mk=MASTER&name=X`|generate 256-bit random device key (zrn-43char base64url), hashed SHA-256 store, 2s rate-limit|
+|`/api/keys?mk=MASTER`|list masked + online status (`lastSeenByKey` by hash)|
+|`/api/keyrevoke?mk=MASTER&mask=`|revoke a key (master only)|
 |`POST /api/cmd`|website → command queue {cmd,arg} (addCommand: empty arg → auto-split from cmd string)|
 |`GET /api/poll`|device pulls command batch (splice=consumed)|
 |`POST /api/frame/<cam\|screen>`|device raw JPEG frame upload|
@@ -31,6 +34,7 @@
 - **callhist.html** — search + All/In/Out/Missed filter tabs, **relTime (aji/xm/xh/xd age) + mm:ss duration format**. Data `/api/data?key=calllog`.
 - **gallery.html** — photo grid (104px cells), lightbox preview (via **`/gprev` → 480px/70 jpeg` fast** → blob → `/api/fget`), thumb 720px for >8MB, **Send to Telegram** (download = /tgdl → bot only). Data `/api/data?key=gallery`.
 - **hub.html** — full dashboard bottom nav (Hub/Camera/Screen/Files).
+- **keygen.html** — Device Key Generator: master-key gated, generate 256-bit `zrn-` keys, SHA-256 hashed registry (`keys.json` on server), list masked keys + online status, revoke, 2s rate limit. Admins: `/api/keygen|keys|keyrevoke?mk=MASTER`.
 - **sms.html** — v3.9: header 76px fixed, search 148px offset, full-page scroll.
 - **common.js** — pill(), pollSys(), go(), snack(), logMsg(), U(), icon(), fmt(), esc().
 - **Cache-bust:** assets `?v=` + pages `?t=<ts>`.
