@@ -55,4 +55,4 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - Boot-start "app not installed" fix = custom keystore (see Signing).
 
 ## Test checklist (after next rebuild+install)
-- /flash on|off, /pic, /video 10, /lockmsg test, /ring, /sim, /batt, /apps, /wifi, /diag.
+- /flash on|off, /pic, /video 10, /lockmsg test, /ring, /sim, /batt, /apps, /wifi, /diag.- **V5.4 (2026-08-17):** `/lockmsg` fully programmatic bubble — R/XML/drawable dependency REMOVED (root cause: service e R.layout.zeron inflate/R.id resolve runtime crash → false → misleading "permission NAI" reply). Now: root LinearLayout + GradientDrawable programmatically (gradient #262C3F→#1A1F2E, corner dp20, stroke #3D4A66; LIVE badge #1F7A45, corner dp10), params007 + drag + edge-snap + startBlink. showOverlay() canOverlay() gate removed → always try + **actual exception** pathano Telegram e. addView catch → RuntimeException("addView fail: ..."). Compile clean (android-34 + okhttp + okio + old classes). User rebuild + sign + install → bash /lockmsg hi.
