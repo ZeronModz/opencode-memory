@@ -1,6 +1,6 @@
 # 🌐 ZeronRemote — Website + Live Dashboard + Server Remote Control + Anti-Theft
 
-**Status:** 🟢 LIVE & DEPLOYED. Server v5.1 (remote control: letterbox-fixed touch mapping + sensitivity + top-pad) + Android Telegram bot + web control.
+**Status:** 🟢 LIVE & DEPLOYED. Server v5.2 (percent-coord touch + .jpg frame polling = reliable screen + accurate tap).
 
 ## Live Info
 - **Server:** `https://zeronremote-production.up.railway.app` (Railway, service `zeronremote`)
@@ -23,7 +23,7 @@
 |`GET /api/sys`|lastSeen/now (heartbeat + poll both bump)|
 
 ## Page design (public/, Material 3 dark)
-- **control.html** — v5.1 remote control: full-bleed screen + touch overlay; **letterbox-aware `contentRect()` mapping** (natural size → actual content box, fixes wrong-click); statusbar 80px top pad; settings sheet: swipe sensitivity/tap-dur/swipe-dur/X+Y offset/long-press toggle (localStorage zr.cfg); **control.js** external engine (Pointer Events); bottom keys row + typer + accbar. icons+ i-bell, i-keyboard. server serves any `*.css|js|svg`.
+- **control.html** — v5.2 remote control: full-bleed screen + touch overlay; **PERCENT-coordinate touch** (web sends 0-100% of visible content box, device converts to real px via displayMetrics); **`.jpg` single-frame polling** (900ms) instead of MJPEG = screen always visible; settings sheet: swipe sensitivity/tap-dur/swipe-dur/X+Y offset(±2%)/long-press toggle (localStorage zr.cfg); **control.js** external engine (Pointer Events, frameBusy lock); 80px top pad statusbar; bottom keys + typer + accbar. icons+ i-bell, i-keyboard. server serves any `*.css|js|svg`.
 - **cam.html** — premium: corner brackets, LIVE blink pill, Selfie/Rear cards, stream health, MJPEG fullscreen. No appbar/bnav.
 - **files.html** — v4.4: header floating (env+82px), `<--toph:148px`, compact 560px centered, **dedicated scroll container**. wrap absolute top env+148px bottom 0 overflow-y:auto, body overflow hidden, touch-action pan-y, padding 0 14px 120px. Preview lightbox + bottom sheet (Send to TG /tgdl, Zip /tgzip, Download, Close). pollDone stops reload loop. Grid/list toggle, breadcrumbs, search, skeleton.
 - **applist.html** — search, app name/pkg/version, permission chips (granted/denied/total), expandable perm list, letter avatars. Data via `/api/data?key=apps` (device buildAppsJson push).
