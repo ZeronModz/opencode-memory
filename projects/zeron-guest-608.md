@@ -47,3 +47,64 @@ JSON inject logic JVM-verified with exact sample `{"guest_account_info":{"com.ga
 - SCAN STORAGE → finds guest*.dat → tap copies path, long-press shows preview dialog + copy buttons.
 - Inject: fill UID/Pass/Path → INJECT → status green OK + `.zeron` backup created, original updated.
 - Invalid path / wrong JSON → red FAIL with reason (validates before write).
+
+## ✅ REDESIGN 2026-08-18 — View-File Driven UI (GuestUi.java DELETED)
+Old approach (GuestUi.java programmatic UI + `setContentView(GuestUi.build(this))`) replaced with
+native Sketchware **view-file driven** UI — builder generates the layout from the encrypted `view` file.
+GuestUi.java removed; the fork's MainActivity inflates `@main.xml` from `view`, and `GuestCore.java`
+now contains renderResults + showPreviewDialog (dynamically built MaterialCardView result rows).
+
+### Files
+- `files/java/GuestCore.java` — updated: scanStorage now matches EXACT `guest100067.dat` only
+  (case-insensitive); added `renderResults(Activity, LinearLayout, List<String>)` (M3 result cards:
+  ✓/? icon, GUEST/RAW pill tag, name+path, click=copy path, long-click=preview dialog) and
+  `showPreviewDialog(Context, path)` (MaterialAlertDialogBuilder, monospace scrollable body, COPY
+  CONTENT / COPY PATH / CLOSE). Compile-clean vs android-34 + material 1.14 (verified).
+- `files/java/GuestUi.java` — DELETED.
+- `files/resource/drawable/bg_*.xml` — 7 ripple/shape drawables (btn primary / primaryContainer /
+  errorContainer / tertiaryContainer, hero chip, count pill, result card). NOTE: build failed once on
+  `#33930000A` (invalid hex) — fixed; all colors now valid 8-digit hex or `@color/md_theme_*`.
+
+### view file (encrypted, rebuilt via gen_608_view.py + Crypt)
+`@main.xml` 42 components — Material 3, user palette (`md_theme_*`):
+`root_container` (LinearLayout, surface bg, 16/16/28/18 padding) →
+- card_hero (MaterialCardView, primary #4C662B, radius 28dp) → hero_box → GUEST INJECTOR (22sp onPrimary),
+  subtitle, chip (bg_chip_hero).
+- card_perm (surfaceContainerHigh, radius 24dp, outlineVariant stroke) → perm_box → "Storage Access"
+  (16sp bold), perm_status (STATUS: NOT GRANTED, error color), desc, btn_grant (GRANT ALL FILES ACCESS,
+  bg_btn_errorcontainer), notif_row → notif_title/desc + btn_notif (ALLOW, bg_btn_primarycontainer).
+- card_scan → scan_head (title + scan_count pill bg_pill), scan_hint, btn_scan (SCAN STORAGE,
+  bg_btn_primary), progress (CircularProgressIndicator type-0, visibility gone, 48dp indColor primary),
+  result_head "FOUND FILES", results_container, scan_empty.
+- card_inject → inject_title, til_uid+et_uid, til_pass+et_pass (password_toggle, inputType 129),
+  til_path+et_path, inject_hint, btn_inject (INJECT, bg_btn_tertiarycontainer), txt_inject_status.
+- `@main.xml_fab` → _fab hidden (visibility gone).
+Component schema (id/convert/type/parent/parentType/index/inject) mirrors project 4 (p4) entries:
+  MaterialCardView type 36 (parentType 36 for children), TextInputLayout type 38, TextInputEditText type 5,
+  LinearLayout 0, Button 3, TextView 4, CircularProgressIndicator 0.
+Encryption: `Crypt enc logic_new.txt → view` (same RSA/AES as fork). Round-trip verified.
+
+### logic file (encrypted, via gen_608_logic.py)
+Single section `@MainActivity.java_onCreate_initializeLogic` + one `addSourceDirectly` block
+(exact same pattern as working 604 calculator). Injected Java in MainActivity initializeLogic():
+  statusbar/navbar = 0xFFF9FAEF + LIGHT_STATUS_BAR, hide ActionBar, DynamicColors.applyToActivityIfAvailable,
+  findViewById all widgets, storage permission status reflection (GRANTED → green/gone), auto
+  requestNotifPermission, btn_grant→requestStorageAccess, btn_notif→requestNotifPermission,
+  btn_scan→(perm check)→progress + bg thread scanStorage→post→renderResults + count + empty msg,
+  btn_inject→validate UID/pass/path + file exists→bg thread inject→post status.
+All R.id.* used verified present in view.
+
+### Fork facts (learned, confirmed from debug.txt)
+- Fork = Sketchware Pro **v7.0.0-daydream-android33-68519a4 (150)** = same as projects 4/603/604
+  (project_config: min_sdk 24, viewbinding true, xml_command true). 607 uses a different fork.
+- Build flow (debug.txt 2026-08-18): aapt2 compile generated res → compile `files/resource` (imported)
+  → aapt2 link. `mv com.google.android.material` local lib material-v1.14.0-alpha06 in libs/local_libs.
+- MainActivity.java generated from `logic` sections `@MainActivity.java_<method>`.
+- `files/resource` = imported res dir (compiled); **no plaintext resource dir** — project `resource`
+  is an encrypted blob (use Crypt for values too if editing colors).
+- mysc/list/<id>/project = encrypted project metadata (name, pkg, colors).
+- Drawables MUST use valid hex (build fails hard on bad literal like #33930000A).
+
+### Build status
+- Last auto build attempt (23:23) failed ONLY at aapt2 link on the bad drawable hex — that is fixed now.
+- User should now Build (signed) → expect runtime verification of new M3 layout + wiring.
