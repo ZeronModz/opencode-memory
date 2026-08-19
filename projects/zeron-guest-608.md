@@ -108,3 +108,36 @@ All R.id.* used verified present in view.
 ### Build status
 - Last auto build attempt (23:23) failed ONLY at aapt2 link on the bad drawable hex — that is fixed now.
 - User should now Build (signed) → expect runtime verification of new M3 layout + wiring.
+
+## ✅ FIX 2026-08-19 — ViewBinding blocker solved (custom MainActivity.java override)
+Latest build failed: generated `MainActivity.java` referenced `MainBinding` (viewbinding enabled) but
+`MainBinding` wasn't generated → "Failed to compile Java files". Root cause: this fork generates
+MainActivity.java from the `logic` file template that assumes ViewBinding.
+
+### The proven pattern (from same-fork projects 4 & 603)
+- **`files/java/MainActivity.java`** (custom, package `dev.zeron.guest`) **OVERRIDES** the generated
+  activity. It extends `AppCompatActivity`, does `setContentView(R.layout.main)` + `findViewById`
+  (NO ViewBinding). p4/603 work exactly this way.
+- **`logic` file = EMPTY** (16-byte encrypted, decrypts to 0 bytes) — p4/603 logic decrypts to 0 bytes.
+  Copy `data/4/logic` → `data/608/logic` (verified md5 match).
+- Kept `files/resource/layout/main.xml` override (imported res wins over generated via aapt2 overlay).
+
+### Current 608 state (all set for build)
+- `data/608/logic` = p4's empty logic (16 bytes, decrypts to 0).
+- `files/java/MainActivity.java` (NEW, 6.9KB) — custom override: DynamicColors, statusbar/navbar
+  0xFFF9FAEF, findViewById all 16 ids, refreshPermStatus (GRANTED/NOTIF status + btn_scan enable),
+  auto requestNotifPermission on S+, btn_grant→requestStorageAccess, btn_notif→requestNotifPermission,
+  btn_scan→bg thread scanStorage→post renderResults+count+empty, btn_inject→validate 3 fields→bg
+  thread inject→post status.
+- `files/java/GuestCore.java` unchanged (compile-clean).
+- Verified: MainActivity + GuestCore **compile together cleanly** via javac vs android-34 + real
+  appcompat 1.7.0 + core 1.13.1 + fragment 1.8.3 + material 1.14 + cardview (downloaded from
+  dl.google.com maven; stubs only for androidx.annotation.NonNull, LifecycleOwner, ViewModelStoreOwner,
+  HasDefaultViewModelProviderFactory + fake R — runtime build provides real ones).
+- `data/608/view` untouched (still valid 42-comp main.xml + fab).
+- Deps fetched locally for future checks: `/data/data/com.termux/files/usr/tmp/opencode/check/`
+  (appcompat/core/fragment/drawer/customview/activity/savedstate/lifecycle/cardview jars).
+
+### NEXT
+- User: Build (signed) in Sketchware → expect: no MainBinding error, M3 layout inflates, scan/inject work.
+- If build still regenerates MainActivity from empty logic → may need `enable_viewbinding:false` too.
