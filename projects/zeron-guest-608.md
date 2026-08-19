@@ -159,3 +159,18 @@ User feedback batch: (1) scroll hocche na (2) permission paile card_perm hide ho
 - All ids in Java == ids in XML (diff empty). All drawables referenced exist. All 16 md_theme colors used defined. All XML well-formed (python parse).
 - aapt2 host binary won't run on Android (exec format error) — trust fork build pipeline (worked before).
 - **NOTES**: MaterialButton/LinearProgressIndicator/ExtendedFAB/FilledBox styles verified present in material-v1.14.0-alpha06 res. bg_btn_* old drawables unused but kept (harmless).
+
+## ✅ UI v3 2026-08-19 — pinned hero, auto-fill+persist path, gap fix, credits card, M3 widgets everywhere
+User feedback (Bangla scri pt): (1) sob scroll hobe **card_hero bade** (pinned) (2) scan pore et_path e path auto-fill (3) user path diye inject korle path **SharedPreferences** e save → reopen e thakbe (4) results_container e icon+name+path **gap** (sob icon er sathe lege jacche) (5) sob color **values** theke (theme only, tone-similar allowed) (6) **TextInputLayout model variety** (7) anek material widgets/animation use (8) **credit/About card** + apnar Telegram/GitHub (9) aro features ami.
+### Changes
+- **main.xml**: root = LinearLayout → **card_hero pinned** (top, na scroll) + FrameLayout(weight1) → ScrollView content (card_perm, card_scan, card_inject, card_about) + ExtendedFAB fab_rescan. Hero e 2 chips (hero_chip status + MATERIAL 3 tag).
+- **Auto-fill**: scan done hole et_path e **first found path auto-fill**; result row tap karle o path fill + copy (renderResults e pathField + onFill callback param). et_path helperText "Tap a scan result to fill — saved between opens".
+- **SharedPreferences** `guest_inject` (K_UID/K_PASS/K_PATH/K_AUTO): load on create, save via TextWatcher (sob 3 field), saveFields() on auto-fill/inject. Reopen → fields thake.
+- **Gap fix**: renderResults row rebuilt — circular 42dp iconBox (ic_search on primaryContainer OVAL) + texts inset 12dp start + GUEST/RAW tag pill (valid? primaryContainer:errorContainer) + card bg surfaceContainerLow/stroke outlineVariant, row bottomMargin 10dp, **staggered fade+slide animation** (alpha 0→1, translationY, 55ms stagger, 240ms).
+- **Theme colors everywhere**: all hardcoded rgb in renderResults + preview dialog → `R.color.md_theme_*`; main.xml hex→values tokens (`m3_hero_grad_start/center/end`, `m3_onPrimary_sub`, `m3_hero_icon_bg`). bg_hero_gradient/bg_hero_icon now use @color tokens.
+- **M3 widgets more**: `MaterialSwitch` switch_auto (AUTO-SCAN ON OPEN, persisted K_AUTO), `Chip` Assist chip_scan_state (READY/SCANNING/N FOUND/NO FILES), TextInputLayout variety: uid=FilledBox, pass=**OutlinedBox**, path=FilledBox+clear_text+helperText, btn_paste=TextButton (clipboard→et_path), MaterialSwitch in scan card, MaterialButton TonalButton for Telegram/GitHub.
+- **Credits card** (secondaryContainer bg): avatar "DZ" (bg_avatar oval), "Made by DevZeron", btn_telegram (t.me/ZeronModz) + btn_github (github.com/ZeronModz) open via ACTION_VIEW, version "v1.3 · Material 3".
+- New drawables: ic_copy, ic_paste, ic_telegram, ic_github, bg_avatar. All colors from values only.
+- Auto-scan on open ekhon switch-controlled (if off → manual only).
+- **NOTES**: til_pass OutlinedBox startIconDrawable initially bhul kore @color diyechilam → @drawable/ic_lock fix. aapt2 host nai (Android), fork build pipeline e validate hobe. Compile EXIT 0 (full androidx classpath + material). ids/drawables/colors all matched, XML all well-formed (verified).
+- Telegram/GitHub handle default rakha: ZeronModz (@ZeronModz / github.com/ZeronModz) — user chaile bolo, change korbo.
