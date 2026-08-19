@@ -141,3 +141,21 @@ MainActivity.java from the `logic` file template that assumes ViewBinding.
 ### NEXT
 - User: Build (signed) in Sketchware → expect: no MainBinding error, M3 layout inflates, scan/inject work.
 - If build still regenerates MainActivity from empty logic → may need `enable_viewbinding:false` too.
+
+## ✅ UI v2 2026-08-19 — scroll + auto-scan + notif alerts + premium M3 (from user feedback)
+User feedback batch: (1) scroll hocche na (2) permission paile card_perm hide hobe (3) app open korle auto-scan + scan button (4) scan korar somoy notification alert (notif perm sob mongolo) (5) latest M3 widgets + premium design.
+### Changes applied
+- **layout/main.xml rebuilt** (all existing ids preserved):
+  - Root = FrameLayout `root_container` → ScrollView `scroll` (fillViewport) → content LinearLayout (paddingBottom 112dp) → **ExtendedFloatingActionButton `fab_rescan`** (bottom|end, RESCAN + ic_refresh).
+  - Hero = **FrameLayout `card_hero`** (background = gradient `bg_hero_gradient` #5B7A33→#394E1F, elevation 2dp) (MaterialCardView android:background override kore na → FrameLayout safe) + `hero_icon` (52dp bg_hero_icon #26FFFFFF, "GI") + title/sub + `hero_chip` (status text).
+  - Perm card = **`card_perm` id added** (hidden when storage granted); LOCK icon square (bg_icon_soft); btn_grant = MaterialButton (bgTint errorContainer, corner 16, icon ic_lock); btn_notif = MaterialButton (icon ic_notifications).
+  - Scan card = MaterialButton btn_scan (icon ic_search, bgTint primary), **`scan_progress`** = LinearProgressIndicator (indeterminate) + keep circular `progress`; tile length count pill; results_container/scan_empty kept.
+  - Inject card = 3x **TextInputLayout FilledBox** (boxBackgroundColor surfaceContainerHighest, corner 16, startIcon ic_person/ic_lock/ic_folder, pass=password_toggle), btn_inject = MaterialButton (icon ic_send, bgTint tertiaryContainer).
+  - New drawables (7 vector icons + 3 shapes): ic_search, ic_refresh, ic_lock, ic_notifications, ic_send, ic_person, ic_folder, bg_hero_gradient, bg_hero_icon, bg_icon_soft. (Standard M I paths.)
+- **GuestCore.java**: added scan notifications — `SCAN_CHANNEL`/`SCAN_NOTIF_ID`(4001), `ensureScanChannel` (API26+, IMPORTANCE_DEFAULT, silent), `notifyScanStart` (ongoing, "Scanning storage...", smallIcon ic_search, CATEGORY_PROGRESS), `notifyScanDone(found)` ("N file(s) found"), `cancelScanNotif`. Guards hasNotifPermission + API<26 old Builder. Means notif permission ekhon kaj kore.
+- **MainActivity.java**: added card_perm/hero_chip/fab_rescan/scan_progress wiring; `refreshPermStatus` → **card_perm GONE when storage granted** + hero_chip "AUTO-SCAN READY" vs "SETUP REQUIRED"; **auto-scan on open** (onResume, once, 250ms delay, flag autoScanned); fab_rescan click = rescan; doScan toggles scan_progress+progress and fires notifyScanStart → notifyScanDone (also cancel leaks). Did NOT keep background scan alive beyond onDestroy (no foreground service — ok for short scan).
+### Verification
+- javac (real androidx: appcompat/core/fragment/drawer/customview/activity/savedstate/lifecycle/cardview/coordinator + material + android-34) → **EXIT 0** both files (stubs only: NonNull, LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory, fake R).
+- All ids in Java == ids in XML (diff empty). All drawables referenced exist. All 16 md_theme colors used defined. All XML well-formed (python parse).
+- aapt2 host binary won't run on Android (exec format error) — trust fork build pipeline (worked before).
+- **NOTES**: MaterialButton/LinearProgressIndicator/ExtendedFAB/FilledBox styles verified present in material-v1.14.0-alpha06 res. bg_btn_* old drawables unused but kept (harmless).
