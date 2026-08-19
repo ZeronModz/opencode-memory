@@ -224,3 +224,22 @@ User feedback: hero scroll effect sundor na — items upore jete jete hero er ni
 ### Notes
 - Unused imports (Manifest/Activity/PackageManager/Environment/Settings) v3 theke ache — warnings only, kintu kept.
 - batch status er password kono UI te show hoyna, sudhu prefs e plaintext JSON — guest password low-risk (design intent).
+
+## ✅ UI v7 2026-08-19 — TRUE SLIDE-UNDER HERO + brand logo + credits redesign + typography + batch persistence fixes
+User feedback: hero scroll (wave curve) khub beshi kharap lagtese; batch session jeno file path + data sob persist hoy (background/kill/reopen/1 mase), "উল্টাপাল্টা" hocche; card_hero design unique premium + scroll smooth + latest M3 animations/widgets + credits/telegram/github card modern + alada logo; "Guide attention with typography".
+### Changes
+- **LAYOUT RESTRUCTURE — real slide-under**: root LinearLayout → **FrameLayout**. card_hero ekhon inner scroll FrameLayout er PORE (overlay) — elevation 6dp, layout_gravity top. Scroll content topPadding **14→150dp**. Ekhon cards scroll korle actually hero er UNDER side slide hoy (real overlap), age straight clipped ditchlo. Smooth.
+- **Hero redesign**: wave vector (bg_hero_curve) BAD → `bg_hero_round.xml` (clean gradient #5B7A33→#394E1F, all corners 24dp). **Brand logo `logo_gi.xml`** (VectorDrawable — rounded 24r gradient square + white person glyph, group translate(48,48) scale2) → hero_icon ekhon **ImageView** (age TextView "GI"). Typography: hero_title 22sp bold letterSpacing 0.03, hero_sub "GARENA GUEST ACCOUNT MANAGER" 11sp bold letterSpacing 0.1.
+- **Credits card modern**: new **`bg_credits.xml`** gradient (secondaryContainer→surfaceContainerLow), avatar = **logo_gi** 64dp ImageView, "Made by DevZeron" 17sp letterSpacing, "ANDROID DEVELOPER" 10sp kicker-style, divider 120dp outlineVariant, btn_telegram = primaryContainer tonal + btn_github = tertiaryContainer tonal (different color), version **v1.4** pill (bg_pill onPrimaryContainer).
+- **Typography kickers** ("Guide attention with typography"): every card got a small uppercase letterSpaced 0.18 label — PERMISSIONS / STORAGE / SINGLE INJECT / MULTI ACCOUNT (primary color, 10sp bold).
+- **BATCH PERSISTENCE FIXES** (user: path+data thakhto na, ultapalta hocche):
+  1. Import path ekhon SAVED: `K_IMPORT_PATH` in saveFields (etImportPath TextWatcher-saver e add kora) + restored on create.
+  2. **Current batch fields saved**: persistBatch ar ekhon KB_CUR_UID/KB_CUR_PASS (etUid/etPass text) store kore → restoreBatch er por je account e chhilo seta (user edit kora values) fere ashe. App die gele edited value noyabat.
+  3. **"উল্টাপাল্টা" root cause**: onResume auto-scan doScan e etPath overwrite korto found.get(0) → batch active hole ar overwrite kore NA (`if (!batchActive) etPath.setText(...)`) — batch er jonne user-er path control thake.
+- renderResults age thekei M3 MaterialCardView + ripple + stagger animation (v3/v4) — unchanged.
+### Verification
+- javac EXIT 0. XML well-formed. All ids present (hero still hero_icon/hero_title/hero_sub/hero_chips/hero_chip). Drawables/colors matched. bg_credits @color refs OK.
+- ParseTest 4 cases + PersistTest round-trip still pass.
+- Unused now (kept): bg_hero_curve, bg_hero_gradient, bg_hero_icon, bg_avatar, avd_scan_spin, ic_refresh_spin, anim/anim_rotate.
+- NOTE: hero overlay er moddhe touch interception — content area theke scroll hoy (hero blocked na). kb_runtime e check dorkar.
+- User in-app Build + runtime test pending (last build fix: ToggleButton→OutlinedButton).
