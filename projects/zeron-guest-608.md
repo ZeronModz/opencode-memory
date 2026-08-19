@@ -174,3 +174,15 @@ User feedback (Bangla scri pt): (1) sob scroll hobe **card_hero bade** (pinned) 
 - Auto-scan on open ekhon switch-controlled (if off → manual only).
 - **NOTES**: til_pass OutlinedBox startIconDrawable initially bhul kore @color diyechilam → @drawable/ic_lock fix. aapt2 host nai (Android), fork build pipeline e validate hobe. Compile EXIT 0 (full androidx classpath + material). ids/drawables/colors all matched, XML all well-formed (verified).
 - Telegram/GitHub handle default rakha: ZeronModz (@ZeronModz / github.com/ZeronModz) — user chaile bolo, change korbo.
+
+## ✅ UI v4 2026-08-19 — THEME COLOR ROOT FIX + icons + pretty JSON preview + hero margin
+Root cause haar: theme-driven colors (MaterialSwitch, default buttons, cursor, ripple) brown #AB6543 chhilo — karon **light mode e AppTheme nei**, only values-night/AppTheme existed. Fix: values/themes.xml e LIGHT AppTheme add (same full md_theme mapping, parent Theme.Material3.DayNight.NoActionBar) + colors.xml colorPrimary/Accent/Dark/ControlHighlight/Normal green family. Abar kono widget theme-color mismatch na.
+### Changes
+- **themes.xml**: LIGHT AppTheme (full color mapping — mirror of night one, DayNight parent). Night AppTheme already existed. Now light+dark both green.
+- **colors.xml**: colorPrimary=#4C662B, colorPrimaryDark=#394E1F, colorAccent=#4C662B, colorControlNormal=#4C662B, colorControlHighlight=#CDEDA3 (je brown gulo theme e remap kore dibe).
+- **icons rewrite (accurate Material paths, single path, #FFFFFF)**: ic_copy (content_copy), ic_paste (content_paste — age path nokia holo), ic_telegram (correct plane), ic_github (standard octocat). Purono broken paths bad. Baki (ic_search/refresh/lock/notif/send/person/folder) as kotha classic correct ache.
+- **main.xml**: card_hero ekhon margin 16dp side + 8 top (full-width flush na), hero_icon 56dp. Text fields **sobgulo uniform FilledBox** (uid/pass/path) corner 18dp same bg + **14dp gap** between (pass o FilledBox e change, age OutlinedBox). fab_rescan explicit iconTint onPrimaryContainer.
+- **GuestCore.showPreviewDialog v2**: theme-colored preview — pretty JSON (org.json toString(4)) + **syntax coloring** via colorizeJson (keys=md_theme_primary, strings=tertiary, numbers=error, punctuation=outline, text=onSurface — sob theme token), monospace, body bg surfaceContainerLow, boxed scroll, title=file name, buttons COPY JSON / COPY PATH / CLOSE.
+- **Haptic**: result row click e performHapticFeedback(CLOCK_TICK).
+- JVM verified org.json toString(4) output clean for guest_account_info JSON. Compile EXIT 0 (full androidx+material+coordinator), all ids/drawables/colors matched, XML well-formed.
+- NOTE: JSONArray import added to GuestCore (was missing). b.setMessage + setView both allowed in M3 dialog (message subtitle + colored body).
