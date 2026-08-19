@@ -203,3 +203,24 @@ User want: ekta JSON file theke anek account batch e inject kora (uid + password
 - Batch flow (user "baki research kore improve koro"): DONE/CANCEL tokhon e visible jokhon batch active; save kori current etUid/etPass field (user ekhon ja dekhche); inject noya per-account state save na — user INJECT NOW then DONE.
 - btn_inject solid tertiary #386663 white text — theme match.
 - Future: ZeronGuest.json append conflict-free (JSONArray merge), SAF takePersistableUriPermission optional.
+
+## ✅ UI v6 2026-08-19 — ADVANCED HERO SCROLL + BATCH SESSION PERSISTENCE + M3 upgrades
+User feedback: hero scroll effect sundor na — items upore jete jete hero er niche dhuke jacche, chai UNIQUE premium effect; batch import session ta app background/reboot korleo jeno save thake (koto done, koto baki) — 1 maash poreo same point theke resume; ar anek advanced + new Material features.
+### Changes
+- **Hero advanced scroll**: new `bg_hero_curve.xml` (VectorDrawable gradient #5B7A33→#394E1F + bottom quadratic wave `Q160,60 0,46` via aapt:attr gradient) — content scroll korle hero er curved bottom diye slide under hoy (curtain wave look). card_hero background → bg_hero_curve (elevation 2dp).
+- **Parallax collapse** (scroll listener, f=min(1,scrollY/120)): heroIcon scale 0.65 + rotation -6f + alpha 0.8 (parallax tilt); heroTitle translationY -8f + alpha 0.7; heroSub alpha 0.2 + slide -6f; heroChips alpha 0 + slide -22f. FAB hide/show: scroll down 240px → translationY off, up → return (fabHidden flag).
+- **Hero chip pulse**: ObjectAnimator alpha 1→0.55 infinite REVERSE, startDelay 400ms, start jokhon storage granted (refreshPermStatus→startHeroPulse(true)), cancel otherwise + onDestroy.
+- **Batch SESSION PERSISTENCE**: prefs `guest_inject` + keys `batch_active`/`batch_accounts`/`batch_index`. GuestCore.accountsToJson(List<Account>) → JSON string. `persistBatch()` active+accounts+index save; call inside startBatch AND loadAccount (proti progress e save). `restoreBatch()` onCreate → jodi active hoy + parse thik thake → startBatch(false) + status "Batch resumed — X / N — jekhane chhilo seikhanei" + snackbar. finishBatch → clear (active=false). App kill/reboot/1 maash poreo resume.
+- **Scan depth toggle**: `MaterialButtonToggleGroup` (btn_quick=6 / btn_deep=12) in scan card, `app:singleSelection`+`selectionRequired`+checkedButton btn_quick; persisted K_DEPTH; GuestCore.scanStorage(int maxDepth) overload (old scanStorage() = 9). doScan → GuestCore.scanStorage(scanDepth) + smoothScrollTo(0,0).
+- **FAB spin while scanning**: ObjectAnimator rotation 0→360 infinite linear 900ms on fabRescan (startSpin/stopSpin), onPause/onDestroy stop. (avd_scan_spin/ic_refresh_spin/anim_rotate resources created but ObjectAnimator approach ei — unused resources harmless.)
+- **Snackbar M3**: GuestCore.snack(Activity, View anchor, String) (ANIMATION_MODE_SLIDE). Batch start/resume/save/done + save error e toast → snack.
+- **Tooltips**: TooltipCompat (androidx.appcompat.widget.TooltipCompat — NOTE: core.view e nei, appcompat.widget e ache) on btnScan/btnInject/btnPaste/fabRescan/btnSelect/btnLoad.
+- **Batch progress**: `batch_progress` LinearProgressIndicator (determinate, trackCornerRadius 4dp, 6dp) in batch card — visible when total>1, setMax(total)+setProgressCompat(acctIndex, true) in loadAccount, GONE in finishBatch.
+### Verification
+- javac EXIT 0 (appcompat TooltipCompat, material MaterialButtonToggleGroup, ObjectAnimator, Snackbar ANIMATION_MODE_SLIDE). New R ids: hero_title/btn_group_depth/btn_quick/btn_deep/batch_progress. Drawables: bg_hero_curve/ic_refresh_spin/avd_scan_spin + anim/anim_rotate.
+- XML all well-formed; ids/drawables/colors matched; MaterialButtonToggleGroup style Widget.Material3.Button.ToggleButton present.
+- **PersistTest JVM**: accountsToJson → parseAccounts round-trip 2 accounts order+uid+pass preserved, empty→"[]". ParseTest 4 cases still pass.
+- aapt2 host nai (Android) — fork pipeline e validate. bg_hero_curve vector gradient = standard AAPT2 aapt:attr, API24+ (min_sdk 24 OK). User in-app Build + runtime test.
+### Notes
+- Unused imports (Manifest/Activity/PackageManager/Environment/Settings) v3 theke ache — warnings only, kintu kept.
+- batch status er password kono UI te show hoyna, sudhu prefs e plaintext JSON — guest password low-risk (design intent).
