@@ -86,3 +86,13 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - Auto-grant strategies: Toggle switch find+click, Allow/Start button find+click, Notification listener row find+toggle
   - Persistent notification for missing permissions
   - Compile: clean (same pre-existing okio error only)
+- **V6.2 (2026-08-24):** FULL MediaProjection flow + App Info auto-grant.
+  - **MediaProjection 3-step flow** (state machine in Accessibility):
+    1. Detect "Share one app" dropdown (Spinner/ExposedDropdown) → click
+    2. Find "Share entire screen" option in popup → click
+    3. Click "Next" → then "Start now"
+  - **App Info → Permissions** navigation: Open App Info, Accessibility auto-toggles OFF permissions
+  - **Special settings auto-grab**: Overlay → Write Settings → All Files → Notif Listener (sequential, each with Accessibility auto-toggle)
+  - `MyAccessibilityService.java` new methods: `handleMediaProjectionFlow()` (state machine), `findDropdown()`, `findShareEntireScreenOption()`, `findNodeByText()`, `findButton()`, `findStartNowButton()`, `findUncheckedToggle()`, `findPermissionAllowButton()`
+  - `AutoSetupActivity.java` updated: `tryGrantViaAppInfoPermissions()`, `trySpecialSettingsNext()` sequential
+  - Compile: clean (pre-existing okio only)
