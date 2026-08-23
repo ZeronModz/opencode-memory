@@ -77,3 +77,12 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - Flow: step counter + onResume resume → sequential progression → finishSetup starts service + finish
   - `PermissionHelperActivity.java` simplified → thin redirect wrapper to AutoSetupActivity
   - Compile: 13 classes clean (only pre-existing okio.ByteString error in RemoteServerClient — not my code)
+- **V6.1 (2026-08-24):** REDESIGNED — Accessibility-first auto-setup. Android 12+ AUTH ISSUE fix.
+  - **Problem:** Android 12+ e Settings e permission toggle korar age phone password lage → auto-grant possible na.
+  - **Problem:** Screen share (MediaProjection) consent dialog every time → can't bypass.
+  - **Solution:** Accessibility FIRST, then Accessibility diye baki permission auto-grab.
+  - New flow: Runtime perms (batch) → Bg location (guide) → Accessibility ON (KEY) → Auto-grant via Accessibility → Battery opt → Device Admin → Done
+  - `MyAccessibilityService.java` updated: `setAutoGrantAction()`, `autoGrantPermission()`, `autoClickAllowButtons()`, `findToggleSwitch()`, `findAllowButton()`, `findNotificationListenerRow()`, `findAllowOrStartButton()`
+  - Auto-grant strategies: Toggle switch find+click, Allow/Start button find+click, Notification listener row find+toggle
+  - Persistent notification for missing permissions
+  - Compile: clean (same pre-existing okio error only)
