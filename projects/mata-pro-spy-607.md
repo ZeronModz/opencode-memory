@@ -313,3 +313,17 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **MainActivity** — starts service → 2 sec → opens App Info → finishes
 - **AutoSetupActivity** — shows permission checklist + opens App Info
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 10 (2026-08-24) — ROOT CAUSE FOUND + FIXED
+- **ROOT CAUSE**: Manifest was missing 20+ permissions! `requestPermissions()` can't show dialog if permission not declared in manifest
+- **Manifest fix**: Added ALL 36 permissions to `attributes.json`:
+  - CAMERA, RECORD_AUDIO, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, ACCESS_BACKGROUND_LOCATION
+  - READ_SMS, READ_CONTACTS, CALL_PHONE, READ_CALENDAR, WRITE_CALENDAR
+  - POST_NOTIFICATIONS, READ_MEDIA_IMAGES/VIDEO/AUDIO (Android 13+)
+  - READ/WRITE_EXTERNAL_STORAGE, REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+  - RECEIVE_BOOT_COMPLETED, VIBRATE, WAKE_LOCK
+  - BLUETOOTH, BLUETOOTH_ADMIN, ACCESS/CHANGE_WIFI_STATE
+  - ACCESS_NETWORK_STATE, QUERY_ALL_PACKAGES
+- **AutoSetupActivity fix**: `requestPermissions()` now called from `onResume()` (not `onCreate`) — activity must be RESUMED for dialog to show
+- **Flow**: onCreate (setup UI) → onResume (300ms delay) → requestPermissions → dialog shows → user taps Allow → next permission
+- **Compile**: clean (pre-existing okio only)
