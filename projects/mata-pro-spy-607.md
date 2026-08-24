@@ -268,3 +268,14 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - Proper `onResume`/`onDestroy` cleanup
 - **Root cause**: `finish()` was killing the permission flow before it could start
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 6 (2026-08-24) — Random Images + Dynamic Animation
+- **Random images** — `/start` and `/menu` now use random images from 5 URLs
+- **Dynamic animation** — `editPhotoCaption()` updates the welcome message after 2 seconds
+- **New methods**:
+  - `sendPhotoWithButtonsGetId()` — sends photo, returns message ID for editing
+  - `editPhotoCaption()` — edits photo caption (for dynamic updates)
+  - `editPhotoButtons()` — edits photo inline keyboard
+- **Control panel** — now uses random image background + clean emoji buttons
+- **Welcome flow** — photo with random image → 2s delay → caption updated to "Device connected & ready"
+- **Compile**: clean (pre-existing okio only)
