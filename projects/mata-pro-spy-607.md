@@ -231,3 +231,17 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - 2-second delay before finish (user can see results)
 - **Files**: `MainActivity.java` (NEW, 30 lines), `AutoSetupActivity.java` (rewrite, 250 lines)
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 3 (2026-08-24) — Critical Bug Fixes + Android 13+ Support
+- **Telegram Bot API fixes**:
+  - `buildKeyboard()` — callback_data truncated to 64 bytes max (Telegram limit)
+  - `webapp:` prefix → uses `web_app` field instead of `callback_data` (for Mini App buttons)
+  - `sendWithButtons()` error handling improved
+  - `requirePerm()` — friendly permission names, HTML formatted message
+- **Android 13+ permissions**:
+  - `AutoSetupActivity` — added `MEDIA_PERMS_33` array (READ_MEDIA_IMAGES/VIDEO/AUDIO)
+  - `stepRuntimePerms()` — checks Android version, requests correct media permissions
+  - `hasStoragePerm()` helper — checks READ_MEDIA_IMAGES on 33+, READ_EXTERNAL_STORAGE on older
+  - `sendGallery()` — uses `hasStoragePerm()` instead of hardcoded permission
+- **Contacts button fix** — now uses `web_app` field (no more BUTTON_DATA_INVALID)
+- **Compile**: clean (pre-existing okio only)
