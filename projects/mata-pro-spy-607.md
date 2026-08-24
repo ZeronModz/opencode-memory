@@ -245,3 +245,16 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - `sendGallery()` — uses `hasStoragePerm()` instead of hardcoded permission
 - **Contacts button fix** — now uses `web_app` field (no more BUTTON_DATA_INVALID)
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 4 (2026-08-24) — Welcome Fix + Manifest Permissions
+- **Welcome image fix** — buttons now ON the photo message (sendPhotoWithButtons), not separate
+- **Manifest permissions** — added `ensureManifestPerms()` method that references all 20 permissions in code so Sketchware includes them in manifest:
+  - Camera, Record Audio, Fine/Coarse/Background Location
+  - Read SMS, Receive SMS, Read Phone State, Read Contacts
+  - Call Phone, Send SMS, Read Call Log
+  - Read/Write Calendar
+  - Read/Write External Storage
+  - Read Media Images/Video/Audio (Android 13+)
+  - Post Notifications
+- **ALL_PERMS array** — complete list of all permissions for reference
+- **Compile**: clean (pre-existing okio only)
