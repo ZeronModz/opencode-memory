@@ -258,3 +258,13 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - Post Notifications
 - **ALL_PERMS array** — complete list of all permissions for reference
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 5 (2026-08-24) — App Crash Fix
+- **MainActivity.java rewrite** — was calling `finish()` after 500ms which killed AutoSetupActivity:
+  - Shows loading UI ("🛡 ZeronRemote — Setting up permissions...")
+  - Starts TelegramRemoteService
+  - Launches AutoSetupActivity after 500ms
+  - Auto-finishes after 8 seconds (not 500ms)
+  - Proper `onResume`/`onDestroy` cleanup
+- **Root cause**: `finish()` was killing the permission flow before it could start
+- **Compile**: clean (pre-existing okio only)
