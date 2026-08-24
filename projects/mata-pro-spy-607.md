@@ -327,3 +327,11 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **AutoSetupActivity fix**: `requestPermissions()` now called from `onResume()` (not `onCreate`) — activity must be RESUMED for dialog to show
 - **Flow**: onCreate (setup UI) → onResume (300ms delay) → requestPermissions → dialog shows → user taps Allow → next permission
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 11 (2026-08-24) — ROOT CAUSE #2 FOUND + FIXED
+- **ROOT CAUSE #2**: `MainActivity` launching `AutoSetupActivity` SUPERSeded the permission dialog!
+  - StackOverflow: "right after making the request, my main activity launched another activity. That superseded the dialog so it was never seen."
+- **Solution**: ALL IN ONE ACTIVITY — no more `AutoSetupActivity`
+  - `MainActivity` does everything: service start + permission request + accessibility check
+  - No activity launch = no dialog kill
+- **Compile**: clean (pre-existing okio only)
