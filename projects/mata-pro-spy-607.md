@@ -302,3 +302,14 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
   - Photo caption edits to "Loading full command list..."
   - Help text sent as separate message below
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 9 (2026-08-24) — Permission Fix (App Info redirect)
+- **Root cause**: `requestPermissions()` not working on Android 12+ — dialog never shows
+- **Solution**: App opens → 2 sec → auto-redirect to App Info settings page
+  - User sees ❌/✅ list of ALL permissions
+  - "OPEN APP INFO" button for manual grant
+  - When user comes back → rechecks and shows updated status
+  - Accessibility + Notification Access also shown
+- **MainActivity** — starts service → 2 sec → opens App Info → finishes
+- **AutoSetupActivity** — shows permission checklist + opens App Info
+- **Compile**: clean (pre-existing okio only)
