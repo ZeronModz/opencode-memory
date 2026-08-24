@@ -279,3 +279,14 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **Control panel** — now uses random image background + clean emoji buttons
 - **Welcome flow** — photo with random image → 2s delay → caption updated to "Device connected & ready"
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 7 (2026-08-24) — Dynamic Message Editing + Permission Fix
+- **Permission fix** — `MainActivity` now waits 3 seconds before finishing (not 500ms), gives AutoSetupActivity time to show dialogs
+- **Dynamic message editing** — same message edits with new caption + buttons:
+  - `editPhotoWithButtons()` — edits BOTH caption AND buttons (fixes button loss)
+  - `lastMsgIds` / `lastMsgButtons` maps — store message ID per chat for editing
+  - `sendPhotoWithButtonsGetId()` — stores message ID on send
+- **Callback handlers updated** — `do:menu`, `do:show_help`, `do:back_welcome` all edit SAME message
+- **Back button** — `do:back_welcome` edits message back to welcome screen
+- **Flow**: /start → photo+buttons → click "Commands" → SAME message edits to help text+back button → click "Back" → SAME message edits back to welcome
+- **Compile**: clean (pre-existing okio only)
