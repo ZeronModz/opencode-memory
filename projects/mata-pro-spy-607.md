@@ -290,3 +290,15 @@ Platform: Sketchware Pro (daydream v7), package `mata.pro`, files in `.sketchwar
 - **Back button** — `do:back_welcome` edits message back to welcome screen
 - **Flow**: /start → photo+buttons → click "Commands" → SAME message edits to help text+back button → click "Back" → SAME message edits back to welcome
 - **Compile**: clean (pre-existing okio only)
+
+### V7.0 Patch 8 (2026-08-24) — Permission Fix + Commands Fix
+- **AutoSetupActivity rewritten** — simple linear flow: requests permissions ONE BY ONE with visible status
+  - No complex state machine, no `requestPermissions` + `onResume` race condition
+  - Each permission checked individually, missing ones requested one at a time
+  - Visual feedback: ⏳ waiting... → ✓ GRANTED or ✗ DENIED
+  - After all runtime perms: opens Accessibility Settings
+  - Auto-finish after 5 seconds
+- **Commands button fix** — `do:show_help` now sends helpText as separate text message (too long for photo caption 1024 char limit)
+  - Photo caption edits to "Loading full command list..."
+  - Help text sent as separate message below
+- **Compile**: clean (pre-existing okio only)
