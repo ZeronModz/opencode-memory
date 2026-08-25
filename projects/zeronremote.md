@@ -27,6 +27,13 @@
 - Send to Telegram: polls status for confirmation (8 retries, 2s)
 - CSS: thumbnail fades in, overlay buttons z-index for clickability
 
+## Gallery Data Push Fix (2026-08-25)
+- **Problem**: 500 thumbnails × ~5KB = ~2.5MB payload, writeTimeout 30s exceeded
+- **Fix**: OUTW 160→80, quality 60→40, MAX_THUMBS 500→200
+- **Fix**: writeTimeout 30s→60s on device OkHttp client
+- **Fix**: Push verification with read-back + retry on failure
+- **Payload**: ~200KB (down from ~2.5MB)
+
 ## Server API Endpoints
 - `GET /api/poll?k=KEY` — Device polls for commands
 - `POST /api/cmd?k=KEY` — Web sends commands `{cmd, arg}`
