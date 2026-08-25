@@ -1,102 +1,40 @@
-# 🌐 ZeronRemote — Website + Live Dashboard + Server Remote Control + Anti-Theft
+# ZeronRemote Project
 
-**Status:** 🟢 LIVE & DEPLOYED. Server v5.3 (offline-bug fix, dual-mode protocol ver2, velocity natural gestures, fast poll 1s). Latest round v5.9: QUERY_ALL_PACKAGES, gprev fast preview, open-app, 4-page polish.
+## Overview
+- **URL**: https://zeronremote-production.up.railway.app
+- **Source**: `/data/data/com.termux/files/home/zeronremote-master/`
+- **GitHub**: `github.com/ZeronModz/zeronremote`
+- **Deploy**: Railway (auto-deploy on push)
+- **Package**: Node.js zero-dependency server
 
-## Live Info
-- **Server:** `https://zeronremote-production.up.railway.app` (Railway, service `zeronremote`)
-- **Device key:** `zrn-3409b9fac69f`
-- **Views (static):** `/` → `/?view=hub` | `cam` (+`&face=front|back`) | `screen` | `control` | `files` | `sms` | `applist` | `contactlist` | `callhist` | `gallery`
-- **Bot:** `/livecam`, `/filesweb`, `/sharescreen`, `/apps`, `/contacts`, `/callhist`, `/gallery`, `/remoteweb` (🕹️ remote control web app), `/acc` (accessibility setup + open settings, 900ms delayed via public wrapper) → web-app buttons
-- **Web static:** `public/{hub,cam,screen,files,sms,applist,contactlist,callhist,gallery}.html` + `app.css` (Material 3 green, prim rgb(177 209 138)) + `common.js` + `icons.svg` (custom sprite, ZERO emoji)
+## Files
+- `server.js` — Main server (~283 lines)
+- `public/` — All web panels
+  - `hub.html` — Dashboard hub
+  - `gallery.html` — Photo gallery with thumbnails + lightbox
+  - `files.html` — File manager
+  - `cam.html` — Camera streaming
+  - `control.html` — Remote control (accessibility)
+  - `sms.html` — SMS viewer
+  - `applist.html` — Installed apps
+  - `contactlist.html` — Contacts
+  - `callhist.html` — Call history
+  - `common.js` — Shared helpers (go(), pollSys(), U(), esc(), fmt())
 
-## Server endpoints (all ?k=KEY)
-|Endpoint|Purpose|
-|---|---|
-|`/api/keygen?mk=MASTER&name=X`|generate 256-bit random device key (zrn-43char base64url), hashed SHA-256 store, 2s rate-limit|
-|`/api/keys?mk=MASTER`|list masked + online status (`lastSeenByKey` by hash)|
-|`/api/keyrevoke?mk=MASTER&mask=`|revoke a key (master only)|
-|`POST /api/cmd`|website → command queue {cmd,arg} (addCommand: empty arg → auto-split from cmd string)|
-|`GET /api/poll`|device pulls command batch (splice=consumed)|
-|`POST /api/frame/<cam\|screen>`|device raw JPEG frame upload|
-|`GET /api/live/<src>.jpg` / `stream/<src>`|latest JPEG / MJPEG (conflated 650ms pump)|
-|`POST /api/data` / `GET ?key=`|snapshot store (status/files/lastid/batt/apps/contacts/calllog/gallery/etc)|
-|`POST /api/fput/<id>` / `GET /api/fget/<id>`|file blob once-serve download|
-|`POST /api/data key=fsroot`+|fsroot-verified listing: match = (snap.fsroot === want path)|
-|`GET /api/ls?path=`|serves listing only when fsroot match; stale error cleared on success|
-|`GET /api/sys`|lastSeen/now (heartbeat + poll both bump)|
+## Gallery Panel (2026-08-25)
+- Grid shows base64 thumbnails (`th` field from device)
+- Lightbox: shows thumbnail immediately + polls for full image (14 retries, 1.5s)
+- Send to Telegram: polls status for confirmation (8 retries, 2s)
+- CSS: thumbnail fades in, overlay buttons z-index for clickability
 
-## Page design (public/, Material 3 dark)
-- **control.html** — v5.3 remote control: full-bleed screen + touch overlay; **dual-mode** (device screeninfo ver=2 → % coords; old apk → px with NAT size); velocity-based gestures (fling/swipe/scroll natural Android feel); `.jpg` polling 900ms; noShare auto-start overlay; settings sheet (sens/tapD/swD/X-Y% offset/long-press, localStorage); 80px top pad; szdebug shows real WxH+vN. **control.js** external. server serves any `*.css|js|svg`.
-- **cam.html** — premium: corner brackets, LIVE blink pill, Selfie/Rear cards, stream health, MJPEG fullscreen. No appbar/bnav.
-- **files.html** — v4.4: header floating (env+82px), `<--toph:148px`, compact 560px centered, **dedicated scroll container**. wrap absolute top env+148px bottom 0 overflow-y:auto, body overflow hidden, touch-action pan-y, padding 0 14px 120px. Preview lightbox + bottom sheet (Send to TG /tgdl, Zip /tgzip, Download, Close). pollDone stops reload loop. Grid/list toggle, breadcrumbs, search, skeleton.
-- **applist.html** — search, app name/pkg/version, permission chips (granted/denied/total), expandable perm list, letter avatars, **Open on device** button (i-launch → `/open <pkg>`). Data via `/api/data?key=apps` (device buildAppsJson push, includes `sys` flag for filtering).
-- **contactlist.html** — search, initials avatar, Call/SMS/Copy-number buttons (send `/call` `/sendsms` cmds). Data `/api/data?key=contacts`.
-- **callhist.html** — search + All/In/Out/Missed filter tabs, **relTime (aji/xm/xh/xd age) + mm:ss duration format**. Data `/api/data?key=calllog`.
-- **gallery.html** — photo grid (104px cells), lightbox preview (via **`/gprev` → 480px/70 jpeg` fast** → blob → `/api/fget`), thumb 720px for >8MB, **Send to Telegram** (download = /tgdl → bot only). Data `/api/data?key=gallery`.
-- **hub.html** — full dashboard bottom nav (Hub/Camera/Screen/Files).
-- **keygen.html** — Device Key Generator: master-key gated, generate 256-bit `zrn-` keys, SHA-256 hashed registry (`keys.json` on server), list masked keys + online status, revoke, 2s rate limit. Admins: `/api/keygen|keys|keyrevoke?mk=MASTER`.
-- **sms.html** — v3.9: header 76px fixed, search 148px offset, full-page scroll.
-- **common.js** — pill(), pollSys(), go(), snack(), logMsg(), U(), icon(), fmt(), esc().
-- **Cache-bust:** assets `?v=` + pages `?t=<ts>`.
-
-## Telegram bot commands (TelegramRemoteService)
-- `/start /help /menu /status /diag /loc /sos /wipe yes /pic /selfie /video N /audio N /batt /ip /ring /flash /sms /vibrate /screenon /bright`
-- `/lock /admin /lockmsg /closemsg /lost N /found /optsetup /overlay /claim /burst /apps /apps list /files /allfiles /zip /wifi /sim /shot /sharescreen /livecam /screenrec /filesweb /contacts /callhist /gallery /call /sendsms`
-
-## Android Java (mata.pro, Sketchware 607)
-### TelegramRemoteService.java (~3300 lines)
-- Poll loop 2s → Telegram updates → command dispatch → owner check (1-min /start claim window, then protected).
-- **Anti-theft:** reboot-detect (elapsedRealtime<3min → 6s auto status+SIM+loc), SIM-change → AUTO LOST MODE (Sim change=lock+photo+loc), 3-bar wrong PIN (MyDeviceAdminReceiver.onPasswordFailed → onUnlockAttack: photo+loc+lost+lock), `/sos` panic (ring 20s+flash+vibrate+screenon+lock), `/wipe yes` (device admin factory reset, 2-step confirm), lost mode scheduler (loc interval + screen-on photo).
-- **Foreground:** startForegroundCompat — computeFgsType() = only GRANTED perms (Android 14+ SecurityException fix), startForeground(3-arg) API34+.
-- **Background features:** ensureFgsForCapture() + releaseTorchCam() (flash's camera khule rakhe → "camera busy"), requestLocationUpdates API31+/singleUpdate fallback, 15s retry + 40s timeout.
-- **sendSimInfo():** IMEI/phone/ICCID/IMSI/operator/network/state/signal. **sendWifiInfo():** speed/freq/BSSID/IP/gateway/nearby.
-- **Send info** — device side: buildAppsJson (icons base64 + perms + sys flag), isSystemOnly() filter (FLAG_SYSTEM && !FLAG_UPDATED_SYSTEM_APP), QUERY_ALL_PACKAGES manifest, MediaStore sendGallery scan (500 media, newest first, inline 160px th), doGprev (480px scaled jpeg 70), doOpenApp.
-- File push to web: `/filepush` + pushFileToWeb + scaledBitmap (8MB+ → 720px thumb).
-- sendMessageWithWebApp() web_app inline buttons.
-- keep-alive: PollRunnable 45s startForegroundCompat re-post + heartbeat() /api/sys + KeepAliveReceiver exact alarm.
-- Full device info: getDeviceInfo (brand/model/android), /diag.
-
-### RemoteServerClient.java
-- poll loop 2s → doFiles (fsroot ALWAYS posts + nearest-parent walk-up fallback), tgdl/tgzip (file/zip→bot, 60MB), heartbeat(), publishScreenFile, **pushData(key,value)** public, **publishBlob(name,file)**, webAppUrl(view,extra).
-- Camera2 live frames cam/front/back.
-
-### Other
-- **MyDeviceAdminReceiver.java** — onPasswordFailed x3 → onUnlockAttack; onPasswordSucceeded resets.
-- **AutoStartReceiver.java** — BOOT_COMPLETED + QUICKBOOT_POWERON + LOCKED_BOOT_COMPLETED + MY_PACKAGE_REPLACED + USER_PRESENT → schedule keepalive + startService + ensurePermissions.
-- **KeepAliveReceiver.java** — setExactAndAllowWhileIdle (API31) / setAndAllowWhileIdle fallback, 3min.
-- **PermissionHelperActivity.java** — CRITICAL runs incl ACCESS_BACKGROUND_LOCATION; allGranted → startService.
-- **GetSmsAndCalls.java** — SMS forward + PHONE_STATE + SCREEN_ON/USER_PRESENT + boot/power events.
-- **MyNotificationListenerService.java** — notif forward to bot.
-- **ScreenCaptureActivity.java** / **LockAlertActivity.java**.
-- Manifest injection: `Injection/androidmanifest/attributes.json` (all perms) + `app_components.txt` (services/receivers, foregroundServiceType=`camera|microphone|location|mediaProjection`, QUICKBOOT/LOCKED_BOOT actions).
-- Full permission list: INTERNET, SMS (read/send/receive), CALL_LOG, PHONE_STATE, CAMERA, RECORD_AUDIO, LOCATION (fine/coarse/background), BOOT, FGS+CAMERA+MIC+LOCATION+MEDIA_PROJECTION+SPECIAL_USE, NOTIF_LISTENER, POST_NOTIFICATIONS, VIBRATE, FLASHLIGHT, WAKE_LOCK, WIFI, DEVICE_ADMIN, BATTERY_OPT, OVERLAY, WRITE_SETTINGS, MANAGE_EXTERNAL_STORAGE, SCHEDULE_EXACT_ALARM, FULL_SCREEN_INTENT, READ_CONTACTS, CALL_PHONE, **QUERY_ALL_PACKAGES**.
-74. **QUERY_ALL_PACKAGES** — Android 11+ package visibility: chara sudhu 12 (system/self) apps dekha jay; pakshi sob installed apps list hobe. Fix = permission + rebuild. ✅
-75. **gallery preview** — 5MB+ full-file `/filepush` slow → `doGprev` 480px/70 jpeg; tgdl TG e file pathan (60MB limit).
-
-## Known bugs / learned (must-read)
-1. **`&key=` vs `?key=`** frontend 404 → use `?key=`. ✅
-2. **Fullscreen** — Telegram `requestFullscreen()` lowercase s.
-3. **Store args** — addCommand auto-splits cmd string into arg (old device + new device both work, fixes files forever-loading).
-4. **FGS type** — Android 14+ static type + ungranted perm = SecurityException → computeFgsType() dynamic.
-5. **setExactAndAllowWhileIdle** — API31+ SCHEDULE_EXACT_ALARM chara SecurityException → canScheduleExactAlarms() fallback.
-6. **Camera busy** — flashCam/open camera held → releaseTorchCam() before capture.
-7. **MediaProjection consent** — ensureProjCallback before createVirtualDisplay; Android 14 token ~10min re-dialog.
-8. **/pic /video background fail** — FGS camera type + release + preview params.
-9. **Location background** — needs ACCESS_BACKGROUND_LOCATION + requestLocationUpdates (singleUpdate unreliable on API31+).
-10. **Audio silent** — empty-file check + 3GP/AMR_NB fallback.
-
-## Deploy flow
-- `git add -A && git commit -m ... && git push` → `railway up --service zeronremote` → wait ~25s → verify `?view=applist` etc all 200.
-- Test locally: `node server.js` then curl localhost:3000 (kill via PID, `pkill -f` hangs on Termux).
-
-## ⚠️ PENDING (user side)
-1. **REBUILD Sketchware APK** — sob Java changes (V7.0 anti-theft, V8.0 background fixes, new voice, pushData/publishBlob, /filepush, /sos, /wipe, /callhist, /gallery, /sim info, /wifi info) e REBUILD + SIGN + INSTALL dorkar. Web side already live.
-2. **Setup ekbar:** app open → perm dialogs (BACKGROUND_LOCATION included) → `/admin` (device admin, anti-force-stop) → `/optsetup` (battery opt exempt) → auto-start ON (Xiaomi/Realme/Vivo).
-3. Test web apps: /apps /contacts /callhist /gallery buttons.
-4. Background /loc /pic /video /audio test after rebuild.
-
-## Caveats
-- Phone OFF → kono app e kaj kore na (Google Find My Device o na). Layer: reboot-detect auto-report.
-- Camera vs /pic conflict (single camera).
-- `get`/`zip` heap ≤50/100MB.
-- `?k=` in URL leaks key — rotate via env.
+## Server API Endpoints
+- `GET /api/poll?k=KEY` — Device polls for commands
+- `POST /api/cmd?k=KEY` — Web sends commands `{cmd, arg}`
+- `GET /api/data?key=X` — Read snapshot
+- `POST /api/data?k=KEY` — Device posts snapshot `{key, value}`
+- `POST /api/fput/<id>` — Upload file blob
+- `GET /api/fget/<id>` — Download file blob (one-time)
+- `GET /api/ls?path=` — File listing
+- `GET /api/sys` — System status
+- `GET /api/devices` — List devices
+- `POST /api/select?device=` — Select active device
