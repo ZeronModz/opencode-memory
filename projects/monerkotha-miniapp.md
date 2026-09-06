@@ -67,3 +67,10 @@
 - Made entire channel card clickable
 - Added touch feedback CSS
 - URL: https://monerkotha-bot.vercel.app
+
+## Fix Deploy 4 (2026-09-06 4th)
+- Added inline script at top of HTML for joinChannel function
+- Used window.location.href as fallback
+- Added try-catch error handling
+- Fresh deploy to new Vercel project (no cache)
+- URLs: https://monerkotha-bot.vercel.app, https://monerkotha-bot-v3.vercel.app
