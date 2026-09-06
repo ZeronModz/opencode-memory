@@ -93,3 +93,9 @@
 ### URLs:
 - https://monerkotha-bot.vercel.app
 - https://monerkotha-bot-v4.vercel.app
+
+## Final Deploy (2026-09-06)
+- All extra projects deleted (v2, v3, v4, debug, htdocs)
+- Updated original `monerkotha-bot` project
+- URL: https://monerkotha-bot.vercel.app
+- Uses `postEvent('web_app_open_tg_link')` for channel joining
