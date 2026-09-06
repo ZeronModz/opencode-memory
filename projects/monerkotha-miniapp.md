@@ -48,3 +48,8 @@
 - [ ] Or better: Create a backend proxy for channel check
 - [ ] Test in Telegram client
 - [ ] Deploy to hosting (Netlify/Vercel/etc)
+
+## Deploy (2026-09-06)
+- **Vercel URL**: https://monerkotha-bot.vercel.app
+- **Vercel Dashboard**: https://vercel.com/dev-zeron/monerkotha-bot/XeqiJq9jc3LgkbWdFfojDuCfHybj
+- Token used for deploy
