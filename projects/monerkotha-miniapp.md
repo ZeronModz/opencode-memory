@@ -53,3 +53,10 @@
 - **Vercel URL**: https://monerkotha-bot.vercel.app
 - **Vercel Dashboard**: https://vercel.com/dev-zeron/monerkotha-bot/XeqiJq9jc3LgkbWdFfojDuCfHybj
 - Token used for deploy
+
+## Fix Deploy (2026-09-06 2nd)
+- Fixed: Channel join buttons now use `tg.openTelegramLink()`
+- Fixed: Bot token updated
+- Fixed: Channel IDs corrected (CodeDevZeron: -1002296425479, MonerKothaa: -1002563935487)
+- Fixed: All buttons now work properly
+- URL: https://monerkotha-bot.vercel.app
