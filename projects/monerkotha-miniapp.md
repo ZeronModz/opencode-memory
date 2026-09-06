@@ -60,3 +60,10 @@
 - Fixed: Channel IDs corrected (CodeDevZeron: -1002296425479, MonerKothaa: -1002563935487)
 - Fixed: All buttons now work properly
 - URL: https://monerkotha-bot.vercel.app
+
+## Fix Deploy 3 (2026-09-06 3rd)
+- Removed `<a>` tags (don't work in Telegram WebView)
+- Changed to `<div>` with inline `onclick` handlers
+- Made entire channel card clickable
+- Added touch feedback CSS
+- URL: https://monerkotha-bot.vercel.app
