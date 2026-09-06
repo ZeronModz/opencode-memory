@@ -74,3 +74,22 @@
 - Added try-catch error handling
 - Fresh deploy to new Vercel project (no cache)
 - URLs: https://monerkotha-bot.vercel.app, https://monerkotha-bot-v3.vercel.app
+
+## Fix Deploy 5 (2026-09-06 5th - MAJOR REWRITE)
+### Root Cause Found:
+1. `openTelegramLink()` has KNOWN BUGS in Telegram - GitHub issues confirm this
+2. `window.location.href` blocked by Telegram WebView
+3. `window.open()` blocked by popup blocker
+4. Inline `onclick` handlers had scope issues
+
+### Solution:
+- Used `tg.postEvent('web_app_open_tg_link', { path_full: '/username' })` - the LOW-LEVEL Telegram API
+- This is from Telegram's official `web_events` API doc
+- Fallback chain: postEvent → openTelegramLink → window.open
+- Used IIFE wrapper to prevent scope issues
+- All event listeners bound via `addEventListener` (no inline onclick)
+- Completely rewritten architecture
+
+### URLs:
+- https://monerkotha-bot.vercel.app
+- https://monerkotha-bot-v4.vercel.app
