@@ -48,3 +48,4 @@
 
 ## Last Updated
 - 2026-09-13: Initial commit pushed, CI/CD configured
+- 2026-09-13: Fixed missing drawable resources (ic_logo, ic_key, ic_telegram, ic_close, etc.) and removed all font/inter_* references from layouts
