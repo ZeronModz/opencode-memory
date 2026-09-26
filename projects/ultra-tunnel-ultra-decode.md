@@ -77,3 +77,11 @@ for k in ["Payload","SNI","V2rayAddress","V2rayConfig","V2rayHost","V2raySNI"]:
 - auto-detects the random char at base64 index 3, decodes both layers,
   falls back to plaintext for unencrypted fields
 - verified: both copies of the BD/Robi config → identical JSON output
+
+## Tool v1 — ZERONUT (2026-09-27 05:56)
+- `ultra_tool.py` — decode/encode/scan/watch/verify/info/list + path shortcut
+- `zeronut.py` — interactive menu (Encryption / Decryption / Scan / Watch / List / Info)
+- `$PREFIX/bin/zeronut` — global shortcut (bash wrapper)
+- Output: `/storage/emulated/0/Download/zeron------vai---pro/config<6digit>.json`
+- Encode: same folder as input json, nam same + `.ultra`
+- All in `/storage/emulated/0/Download/ultra-tunnel/` (+ `HOW_IT_WORKS.md` section 8)
