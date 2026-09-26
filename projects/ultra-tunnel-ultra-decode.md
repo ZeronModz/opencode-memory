@@ -70,3 +70,10 @@ for k in ["Payload","SNI","V2rayAddress","V2rayConfig","V2rayHost","V2raySNI"]:
 ## Files
 - `/data/data/com.termux/files/usr/tmp/opencode/decoded_config.json`
 - reverse artifacts: `/data/data/com.termux/files/usr/tmp/opencode/ultra/`
+
+## Reusable decoder script
+`/data/data/com.termux/files/usr/tmp/opencode/ultra_decode.py`
+- `python3 ultra_decode.py file.ultra [out.json]`
+- auto-detects the random char at base64 index 3, decodes both layers,
+  falls back to plaintext for unencrypted fields
+- verified: both copies of the BD/Robi config → identical JSON output
